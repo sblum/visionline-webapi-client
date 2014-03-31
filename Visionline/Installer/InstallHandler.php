@@ -25,19 +25,22 @@ class InstallHandler
         $pharUri= $extra['visionline-webclient-client']['phar'];
         $event->getIO()->write(sprintf('Downloading Visionline phar from "%s"', $pharUri));
 
-		$pharPath = __DIR__ . '/../Download/visionline.phar';
-		$event->getIO()->write(sprintf('Saving phar at "%s"', $pharPath));
+		$folder = __DIR__ . '/../Download';
+		mkdir($folder);
 		
+		$pharPath = sprintf('%s/visionline.phar', $folder);
+		$event->getIO()->write(sprintf('Saving phar at "%s"', $pharPath));
+			
+		$fp = fopen ($pharPath, 'w+');
 		$ch=curl_init();   
 		curl_setopt($ch, CURLOPT_URL, $pharUri);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_FILE, $fp);
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-		curl_setopt($ch, CURLOPT_BINARYTRANSFER,1);
 		curl_setopt($ch, CURLOPT_HEADER,0); 
 		$response = curl_exec($ch);
-		curl_close($ch);
+		curl_close($ch);		
+		fclose($fp);
 		
-		file_put_contents($pharPath, $response);
 		
 		
     }
