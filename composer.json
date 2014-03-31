@@ -1,12 +1,12 @@
 {
     "name": "sebastianblum/visionline-webapi-client",
-    "type": "symfony-bundle",
+    "type": "library",
     "license": "MIT",
     "description": "Extraction of the visionline webapi client for the crm from visionline.at",
     "autoload": {
-        "psr-0": { 
-          "Visionline\\Installer": "src/",
-          "Visionline\\Crm\\WebApi": "src/" 
+        "psr-4": { 
+          "Visionline\\Installer\\": "src/",
+          "Visionline\\Crm\\WebApi\\": "src/" 
         }
     },
     "scripts": {
