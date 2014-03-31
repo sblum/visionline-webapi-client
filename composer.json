@@ -6,20 +6,15 @@
     "autoload": {
 	    "psr-0": { "Visionline\\": "" }
 	},
-    "scripts": {
-        "post-install-cmd": [
-            "Visionline\\Installer\\InstallHandler::extractPhar"
-        ],
-        "post-update-cmd": [
-            "Visionline\\Installer\\InstallHandler::extractPhar"
-        ]
-    },
     "require": {
     	"php": ">=5.3.3"
     },
 	"extra": {
 		"visionline-webclient-client": {
 			"phar": "https://app2.visionline.at/Website/lib/Visionline.CRM.WebApi.phar"
+		},
+		"branch-alias": {
+		    "dev-master": "master"
 		}
 	}
 }
