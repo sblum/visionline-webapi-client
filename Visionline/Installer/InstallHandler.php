@@ -2,11 +2,11 @@
 
 namespace Visionline\Installer;
 
-use Composer\Script\Event;
+use Composer\Script\PackageEvent;
 
 class InstallHandler
 {
-	public static function extractPhar(Event $event)
+	public static function extractPhar(PackageEvent $event)
 	{
 		$composer = $event->getComposer();
 		$extra = $event->getComposer()->getPackage()->getExtra();
@@ -25,7 +25,7 @@ class InstallHandler
         $pharPath = $extra['visionline-webclient-client']['phar'];
         $event->getIO()->write(sprintf('Downloading Visionline phar from "%s"', $pharPath));
 
-        //print_r($composer->getConfig());
+        print_r($composer->getConfig());
 		echo "\n\nPACKAGE\n\n";
 		print_r($event->getOperation()->getPackage());
 	}
