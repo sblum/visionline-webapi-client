@@ -12,9 +12,6 @@
 	"extra": {
 		"visionline-webclient-client": {
 			"phar": "https://app2.visionline.at/Website/lib/Visionline.CRM.WebApi.phar"
-		},
-		"branch-alias": {
-		    "dev-master": "master"
 		}
 	}
 }
