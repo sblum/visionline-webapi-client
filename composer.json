@@ -5,8 +5,7 @@
     "description": "Extraction of the visionline webapi client for the crm from visionline.at",
     "autoload": {
         "psr-4": { 
-          "Visionline\\Installer\\": "src/",
-          "Visionline\\Crm\\WebApi\\": "src/" 
+          "Visionline\\": "src/"
         }
     },
     "scripts": {
@@ -18,6 +17,9 @@
         ]
     },
     "require": {
-      "php": ">=5.3.3"
-    }
+    	"php": ">=5.3.3"
+    },
+	"extra": {
+		"visionline-webclient-phar": "https://app2.visionline.at/Website/lib/Visionline.CRM.WebApi.phar"
+	}
 }
