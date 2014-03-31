@@ -26,6 +26,7 @@ class InstallHandler
         $event->getIO()->write(sprintf('Downloading Visionline phar from "%s"', $pharPath));
 
         //print_r($composer->getConfig());
+		echo "\n\nPACKAGE\n\n";
 		print_r($event->getOperation()->getPackage());
 	}
 }
