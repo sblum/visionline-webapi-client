@@ -24,9 +24,8 @@ class InstallHandler
 
         $pharPath = $extra['visionline-webclient-client']['phar'];
         $event->getIO()->write(sprintf('Downloading Visionline phar from "%s"', $pharPath));
-
-        print_r($composer->getConfig());
-		echo "\n\nPACKAGE\n\n";
-		print_r($event->getOperation()->getPackage());
+		
+		$installedPackage = $event->getOperation()->getPackage();
+		print_r($installedPackage);
 	}
 }
