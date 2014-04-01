@@ -46,7 +46,7 @@ class InstallHandler
 		$extractFolder .= '/WebApi';
 		mkdir($extractFolder);
 		
-		$phar = new Phar($pharPath);
+		$phar = new \Phar($pharPath);
 		$phar->extractTo($extractFolder, null, true); // extract all files, and overwrite
 		$event->getIO()->write(sprintf('Phar is extracted to "%s"', $extractFolder));
     }
