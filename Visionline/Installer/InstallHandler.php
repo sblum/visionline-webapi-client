@@ -47,6 +47,7 @@ class InstallHandler
 		mkdir($extractFolder);
 		
 		$phar = new \Phar($pharPath);
+		$phar->uncompressAllFiles();
 		$phar->extractTo($extractFolder, null, true); // extract all files, and overwrite
 		$event->getIO()->write(sprintf('Phar is extracted to "%s"', $extractFolder));
     }
