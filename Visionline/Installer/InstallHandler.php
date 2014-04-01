@@ -8,7 +8,6 @@ class InstallHandler
 {
     public static function extractPhar(PackageEvent $event)
     {
-        $composer = $event->getComposer();
         $extra = $event->getComposer()->getPackage()->getExtra();
 
         if (!array_key_exists('visionline-webclient-client', $extra)
@@ -16,7 +15,7 @@ class InstallHandler
         ) {
             throw new \RuntimeException(
                 sprintf(
-                    "Please specify the path to the phar in composer.json\n\n%s",
+                    "Please specify the path to the phar in the composer.json\n\n%s",
                     json_encode(array('extra' => array('visionline-webclient-client' => array('phar' => '...'))))
                 )
             );
@@ -30,7 +29,8 @@ class InstallHandler
 		
 		$pharPath = sprintf('%s/visionline.phar', $folder);
 		$event->getIO()->write(sprintf('Saving phar at "%s"', $pharPath));
-			
+		
+		// Download phar
 		$fp = fopen ($pharPath, 'w+');
 		$ch=curl_init();   
 		curl_setopt($ch, CURLOPT_URL, $pharUri);
@@ -41,7 +41,13 @@ class InstallHandler
 		curl_close($ch);		
 		fclose($fp);
 		
+		$extractFolder = __DIR__ . '/../Crm';
+		mkdir($extractFolder);
+		$extractFolder .= '/WebApi';
+		mkdir($extractFolder);
 		
-		
+		$phar = new Phar($pharPath);
+		$phar->extractTo($extractFolder, null, true); // extract all files, and overwrite
+		$event->getIO()->write(sprintf('Phar is extracted to "%s"', $extractFolder));
     }
 }
