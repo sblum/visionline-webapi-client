@@ -39,7 +39,7 @@ class WebApi
    * The connection to the CRM-VISIONLINE system 
    * @var Connection
    */
-  private $connection;
+  public $connection;
 
   /**
    * Specifies whether debugging is enabled or not.
@@ -493,6 +493,74 @@ class WebApi
       throw $e;
     }
     return $result;
+  }
+  
+  /**
+   * Calls the webservice method Create with the specified arguments
+   * @param string $type the entity type
+   * @param array $fieldValues the field values to assign to the created entity (associative array of string)
+   * @throws \SoapFault if a remote error occurs
+   * @return int The id of the created entity
+   */
+  public function _Create($type, array $fieldValues)
+  {
+    try
+    {
+      $fieldValuesArray = array();
+      foreach ($fieldValues as $field => $value) {
+        $fieldValuesArray[] = array(
+            'field' => $field,
+            'value' => $value
+        );
+      }
+      
+      $id = $this->client->Create($this->connection, $type, $fieldValuesArray);
+  
+      $this->debug('Create - Result is', $id);
+      $this->debug('Create - Request was', $this->client->__getLastRequest());
+      $this->debug('Create - Response was', $this->client->__getLastResponse());
+    }
+    catch (\SoapFault $e)
+    {
+      $this->debug('Create - Request was', $this->client->__getLastRequest());
+      $this->debug('Create - Response was', $this->client->__getLastResponse());
+      
+      throw $e;
+    }
+    return $id;
+  }
+  
+  /**
+   * Calls the webservice method Update with the specified arguments
+   * @param string $type the entity type
+   * @param int $id the id of the entity to be updated
+   * @param array $fieldValues the field values to set (associative array of string)
+   * @throws \SoapFault if a remote error occurs
+   */
+  public function _Update($type, $id, array $fieldValues)
+  {
+    try
+    {
+      $fieldValuesArray = array();
+      foreach ($fieldValues as $field => $value) {
+        $fieldValuesArray[] = array(
+            'field' => $field,
+            'value' => $value
+        );
+      }
+  
+      $this->client->Update($this->connection, $type, $id, $fieldValuesArray);
+  
+      $this->debug('Update - Request was', $this->client->__getLastRequest());
+      $this->debug('Update - Response was', $this->client->__getLastResponse());
+    }
+    catch (\SoapFault $e)
+    {
+      $this->debug('Update - Request was', $this->client->__getLastRequest());
+      $this->debug('Update - Response was', $this->client->__getLastResponse());
+  
+      throw $e;
+    }
   }
 
   /**
@@ -1072,6 +1140,26 @@ class WebApi
     $this->debug("queryContactImages: results = ", $flatResults);
   
     return $flatResults;
+  }
+  
+  /**
+   * Creates an entity of the specified type and sets its fields to the specified values.
+   * @param string $type The type of the entity to create
+   * @param array $values The values to which the entities fields should be set (associative array where the key is the field identifier and the value the field´s value)
+   * @return int The id of the created entity
+   */
+  public function create($type, array $values) {
+    return $this->_Create($type, $values);
+  }
+
+  /**
+   * Updates the entity of the specified type with the specified id and sets it´s fields to the specified values.
+   * @param string $type The type of the entity to update
+   * @param int $id The id of the entity to update
+   * @param array $values The values to which the entity´s fields should be set (associative array where the key is the field identifier and the value the field´s value)
+   */
+  public function update($type, $id, array $values) {
+    $this->_Update($type, $id, $values);
   }
   
   /**

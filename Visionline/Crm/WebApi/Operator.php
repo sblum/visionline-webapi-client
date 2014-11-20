@@ -161,6 +161,11 @@ class Operator
      * @var string
      */
     const InPreviousYear = 'InPreviousYear';
+    
+    /**
+     * String contains another string
+     */
+    const Contains = 'Contains';
 }
 
 ?>
