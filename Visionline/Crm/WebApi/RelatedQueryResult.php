@@ -28,7 +28,7 @@ class RelatedQueryResult extends QueryResult
   {
     parent::__construct($id, $lastModified);
     
-    $this->relatedto = $relatedTo;
+    $this->relatedTo = $relatedTo;
   }
   
   /**
