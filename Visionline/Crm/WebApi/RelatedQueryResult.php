@@ -24,7 +24,7 @@ class RelatedQueryResult extends QueryResult
    * @param int $lastModified The date of the last modification of the entity.
    * @param int The id of the entity to which this result is related
    */
-  public function _construct($id, $lastModified = null, $relatedTo = null)
+  public function __construct($id, $lastModified = null, $relatedTo = null)
   {
     parent::__construct($id, $lastModified);
     
