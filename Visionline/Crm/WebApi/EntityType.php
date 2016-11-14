@@ -41,7 +41,7 @@ class EntityType
 	/**
 	 * Constant for entity-type 'Aktivität'
 	 */
-        const Aktivität = "Aktivität";
+  const Aktivität = "Aktivität";
   
 	/**
 	 * Empty private constructor

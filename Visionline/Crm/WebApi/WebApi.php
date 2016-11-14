@@ -63,7 +63,7 @@ class WebApi
    * The connection timeout used for webservice calls
    * @var int
    */
-  private $connection_timeout = 3;
+  private $connection_timeout = 10;
   
   /**
    * The buffer size for file operations (default is 32K)
@@ -75,13 +75,18 @@ class WebApi
    * The cache
    * @var Cache
    */
-  private $cache;
+  public $cache;
 
   /**
    * Specifies, whether to use cache for queryWebsiteDocuments 
    */
   private $cacheWebsiteDocuments = false;
-  
+
+  /**
+   * @var bool|resource The stream context to use for soap operations
+   */
+  private $stream_context = false;
+
   /**
    * Creates a new CRM-VISIONLINE WebApi PHP Client
    * @param string $endpoint The endpoint (URL) of the CRM-VISIONLINE WebApi Webservice, e.g. https://app2.visionline.at/WebApi/WebApi.aspx?WSDL 
@@ -115,6 +120,7 @@ class WebApi
         'features' => SOAP_SINGLE_ELEMENT_ARRAYS,
         'soap_version' => SOAP_1_1,
         'encoding' => 'utf-8',
+        'stream_context' => $this->stream_context,
         'classmap' => array(
             'Expression' => __NAMESPACE__ . '\Expression',
             'Junction' => __NAMESPACE__ . '\Junction',
@@ -205,8 +211,8 @@ class WebApi
    * @param array $orders the orders to use for this query
    * @param int $first index of the beginning of the result set
    * @param int $max maximum length of the result set
-   * @throws \SoapFault if a remote error occurs
    * @return array an array of objects with the properties 'id' and 'lastModified'.
+   * @throws \Exception if a remote error occurs
    */
   public function _Query($type, $filters, $orders, $first, $max)
   {
@@ -235,15 +241,15 @@ class WebApi
   /**
    * Calls the webservice method QueryResponsibleContacts with the specified arguments
    * @param string $type the entity type
-   * @param int $id the entity id
-   * @throws \SoapFault if a remote error occurs
+   * @param int[] $ids the entity id
    * @return QueryResult an array of objects with the properties 'id' and 'lastModified'.
+   * @throws \Exception if a remote error occurs
    */
-  public function _QueryResponsibleContacts($type, $id)
+  public function _QueryResponsibleContacts($type, $ids)
   {
     try
     {
-      $result = $this->client->QueryMultipleResponsibleContacts($this->connection, $type, $id);
+      $result = $this->client->QueryMultipleResponsibleContacts($this->connection, $type, $ids);
       foreach ($result as $queryResult)
       {
         $queryResult->init();
@@ -266,8 +272,8 @@ class WebApi
   /**
    * Calls the webservice method QueryContactImages with the specified arguments
    * @param array $ids the contact ids
-   * @throws \SoapFault if a remote error occurs
    * @return array of RelatedQueryResult describing the images of the specified contacts
+   * @throws \Exception if a remote error occurs
    */
   public function _QueryContactImages($ids)
   {
@@ -292,7 +298,7 @@ class WebApi
     }
     return $result;
   }
-  
+
   /**
    * Calls the webservice method QueryWebsiteDocuments with the specified arguments
    * @param string $type the entity type
@@ -300,8 +306,8 @@ class WebApi
    * @param int $max specifies the maximum count of website documents returned per entity
    * @param array $filterByExtension filters the returned documents by the specified file extensions (array of strings)
    * @param array $filterByDokumentart filters the returned documents by the specified document types (array of strings)
-   * @throws \SoapFault if a remote error occurs
-   * @return array of \Visionline\Crm\WebApi\RelatedQueryResult describing the website documents
+   * @return array The query results
+   * @throws \Exception if a remote error occurs
    */
   public function _QueryWebsiteDocuments($type, $ids, $max = null, $filterByExtension = null, $filterByDokumentart = null)
   {
@@ -326,15 +332,15 @@ class WebApi
     }
     return $result;
   }
-  
+
   /**
    * Calls the webservice method QueryKontakte with the specified arguments
    * @param string $type the entity type (EntityType::Objekt or EntityType::Projekt)
    * @param array $ids the entity ids
    * @param int $max specifies the maximum number of results
    * @param array $filterByRole filters the returned results by the specified roles (array of strings)
-   * @throws \SoapFault if a remote error occurs
-   * @return array of \Visionline\Crm\WebApi\RelatedRoleQueryResult describing the contacts
+   * @return array The query results
+   * @throws \Exception if a remote error occurs
    */
   public function _QueryKontakte($type, $ids, $max = null, $filterByRole = null)
   {
@@ -366,8 +372,8 @@ class WebApi
    * @param array $ids the entity ids
    * @param int $max specifies the maximum number of results
    * @param array $filterByRole filters the returned results by the specified roles (array of strings)
-   * @throws \SoapFault if a remote error occurs
    * @return array of \Visionline\Crm\WebApi\RelatedRoleQueryResult describing the real estates
+   * @throws \Exception if a remote error occurs
    */
   public function _QueryObjekte($type, $ids, $max = null, $filterByRole = null)
   {
@@ -399,8 +405,8 @@ class WebApi
    * @param array $ids the entity ids
    * @param int $max specifies the maximum number of results
    * @param array $filterByRole filters the returned results by the specified roles (array of strings)
-   * @throws \SoapFault if a remote error occurs
    * @return array of \Visionline\Crm\WebApi\RelatedRoleQueryResult describing the projects
+   * @throws \Exception if a remote error occurs
    */
   public function _QueryProjekte($type, $ids, $max = null, $filterByRole = null)
   {
@@ -428,16 +434,16 @@ class WebApi
   
   /**
    * Calls the webservice method GetInterests with the specified arguments
-   * @param int $kontaktId The ID of the contact
+   * @param array $kontaktIds The IDs of the contacts
    * @param array $filterByStatus filter the returned results by the specified stati
-   * @throws \SoapFault if a remote error occurs
-   * @return array of \Visionline\Crm\WebApi\Interest describing the interests
+   * @return Interest[] describing the interests
+   * @throws \Exception if a remote error occurs
    */
-  public function _GetInterests($kontaktId, $filterByStatus = null)
+  public function _GetInterests($kontaktIds, $filterByStatus = null)
   {
     try
     {
-      $result = $this->client->GetInterests($this->connection, $kontaktId, $filterByStatus);
+      $result = $this->client->GetInterests($this->connection, $kontaktIds, $filterByStatus);
   
       $this->debug('QueryProjekte - Result is', $result);
       $this->debug('QueryProjekte - Request was', $this->client->__getLastRequest());
@@ -458,16 +464,17 @@ class WebApi
    * @param string $type the entity type
    * @param array $ids the ids of the requested entities (array of int)
    * @param array $fields the requested fields (array of string)
+   * @param boolean $return_ids Whether to return ids instead of values for relations
    * @throws \SoapFault if a remote error occurs
    * @return array A two-dimensional array that contains the results. The keys of the first level are
    * the ids of the entities. The keys of the second level are the field identifiers and values are
    * the corresponding field values. The field values are UTF-8 encoded strings.
    */
-  public function _Get($type, array $ids, array $fields)
+  public function _Get($type, array $ids, array $fields, $return_ids = false)
   {
     try
     {
-      $getResults = $this->client->Get($this->connection, $type, $ids, $fields, $this->language);
+      $getResults = $this->client->Get($this->connection, $type, $ids, $fields, $this->language, $return_ids);
 
       $this->debug('Get - Result is', $getResults);
       $this->debug('Get - Request was', $this->client->__getLastRequest());
@@ -623,7 +630,6 @@ class WebApi
        
       throw $e;
     }
-    return $result;
   }
   
   /**
@@ -691,7 +697,7 @@ class WebApi
     }
     else
     {
-      throw new \InvalidArgumentException('Invalid value for parameter "which". Expected (array of) int or QueryResult, got ' . gettype($entry));
+      throw new \InvalidArgumentException('Invalid value for parameter "which". Expected (array of) int or QueryResult, got ' . gettype($which));
     }
     
     // If cache is available, read cache entries where possible
@@ -802,7 +808,7 @@ class WebApi
     }
     else
     {
-      throw new \InvalidArgumentException('Invalid value for parameter "which". Expected (array of) int or QueryResult, got ' . gettype($entry));
+      throw new \InvalidArgumentException('Invalid value for parameter "which". Expected (array of) int or QueryResult, got ' . gettype($which));
     }
     
     if (!$this->cacheWebsiteDocuments)
@@ -931,7 +937,7 @@ class WebApi
     }
     else
     {
-      throw new \InvalidArgumentException('Invalid value for parameter "which". Expected (array of) int or QueryResult, got ' . gettype($entry));
+      throw new \InvalidArgumentException('Invalid value for parameter "which". Expected (array of) int or QueryResult, got ' . gettype($which));
     }
   }
 
@@ -981,7 +987,7 @@ class WebApi
     }
     else
     {
-      throw new \InvalidArgumentException('Invalid value for parameter "which". Expected (array of) int or QueryResult, got ' . gettype($entry));
+      throw new \InvalidArgumentException('Invalid value for parameter "which". Expected (array of) int or QueryResult, got ' . gettype($which));
     }
   }
   
@@ -1031,7 +1037,7 @@ class WebApi
     }
     else
     {
-      throw new \InvalidArgumentException('Invalid value for parameter "which". Expected (array of) int or QueryResult, got ' . gettype($entry));
+      throw new \InvalidArgumentException('Invalid value for parameter "which". Expected (array of) int or QueryResult, got ' . gettype($which));
     }
   }
   
@@ -1074,7 +1080,7 @@ class WebApi
     }
     else
     {
-      throw new \InvalidArgumentException('Invalid value for parameter "which". Expected (array of) int or QueryResult, got ' . gettype($entry));
+      throw new \InvalidArgumentException('Invalid value for parameter "which". Expected (array of) int or QueryResult, got ' . gettype($which));
     }
   
     // If cache is available, read cache entries where possible
@@ -1169,23 +1175,24 @@ class WebApi
    * multiple ids of entities (array of int), a query result describing an entity (QueryResult) or multiple query results describing entities
    * (array of QueryResult)
    * @param array $fields The requested fields (array of string). The strings in this array have to be UTF-8 encoded.
+   * @param boolean $return_ids Whether to return ids instead of values for relations
    * @return array A two-dimensional array that contains the results. The keys of the first level are
    * the ids of the entities. The keys of the second level are the field identifiers and values are
    * the corresponding field values.
    * @see EntityType
    * @see QueryResult
    */
-  public function get($type, array $which, array $fields)
+  public function get($type, array $which, array $fields, $return_ids = false)
   {
     $results = array();
     
     if (is_int($which))
     {
-      return $this->get($type, array($which), $fields);
+      return $this->get($type, array($which), $fields, $return_ids);
     }
     else if ($which instanceof QueryResult)
     {
-      return $this->get($type, array($which), $fields);
+      return $this->get($type, array($which), $fields, $return_ids);
     }
     else if (is_array($which))
     {
@@ -1208,23 +1215,23 @@ class WebApi
     }
     else
     {
-      throw new \InvalidArgumentException('Invalid value for parameter "which". Expected (array of) int or QueryResult, got ' . gettype($entry));
+      throw new \InvalidArgumentException('Invalid value for parameter "which". Expected (array of) int or QueryResult, got ' . gettype($which));
     }
       
     // If cache is available, read cache entries where possible
-    $getIds = $this->cacheRead($type, $results, $fields);
+    $getIds = $this->cacheRead($type, $results, $fields, $return_ids);
     
     if (count($getIds) > 0)
     {
       $this->debug('get: Going to call _Get for ids = ', $getIds);
       
       // Call webservice
-      $getResults = $this->_Get($type, $getIds, $fields);
+      $getResults = $this->_Get($type, $getIds, $fields, $return_ids);
 
       foreach ($getResults as $id => $fields)
       {
         // If cache is available, write cache entries
-        $this->cacheWrite($type, $id, $results[$id]->lastModified, $fields);
+        $this->cacheWrite($type, $id, $results[$id]->lastModified, $fields, $return_ids);
         
         $results[$id] = $fields;
       }
@@ -1239,24 +1246,25 @@ class WebApi
    * @param int $id The entity id
    * @param int $lastModified The entitys last modification date
    * @param array $fields The entitys fields
+   * @param boolean $return_ids Whether the cache entry contains IDs instead of values for relation fields
    */
-  private function cacheWrite($type, $id, $lastModified, $fields)
+  private function cacheWrite($type, $id, $lastModified, $fields, $return_ids = false)
   {
     // If cache is available, store retrieved data
     if (isset($this->cache))
     {
       // Create cache entry
-      $cacheEntry = new CacheEntry($type, $id, $lastModified, $fields);
+      $cacheEntry = new CacheEntry($type, $id, $lastModified, $fields, $return_ids);
     
       // If an up-to-date cache entry already exists, merge it with the new one
-      $oldCacheEntry = $this->cache->get($cacheEntry->getKey());
+      $oldCacheEntry = $this->cache->get($cacheEntry->getKey($this->language));
       if ($oldCacheEntry != null && $oldCacheEntry->lastModified >= $cacheEntry->lastModified)
       {
         $cacheEntry = $cacheEntry->merge($oldCacheEntry);
       }
     
       // Put entry into cache
-      $key = $cacheEntry->getKey();
+      $key = $cacheEntry->getKey($this->language);
       $this->cache->put($key, $cacheEntry);
     
       $this->debug('get: Stored cache entry for key = ', $key);
@@ -1268,15 +1276,16 @@ class WebApi
    * @param string $type The entity type
    * @param array $results Results found in the cache are set to this array.
    * @param array $fields The entitys fields
+   * @param boolean $return_ids Whether the cache entry contains IDs instead of values for relation fields
    * @return array The ids of the entities that could not be answered from the cache. 
    */
-  private function cacheRead($type, &$results, $fields)
+  private function cacheRead($type, &$results, $fields, $return_ids = false)
   {
     if (isset($this->cache))
     {
       foreach ($results as $result)
       {
-        $key = CacheEntry::computeKey($type, $result->id);
+        $key = CacheEntry::computeKey($type, $result->id, $this->language, $return_ids);
         $cacheEntry = $this->cache->get($key);
         if ($cacheEntry != null)
         {
@@ -1294,7 +1303,7 @@ class WebApi
           if (count(array_diff($fields, array_keys($cacheEntry->fields))) > 0)
           {
             $this->debug('get: - Cache entry does not contain requested fields. cacheEntry->fields = ', $cacheEntry->fields,
-                'fields = ' . $fields);
+                'fields = ', $fields);
             continue;
           }
           
@@ -1387,7 +1396,7 @@ class WebApi
    * @param array|int $document The document(s) for which the content should be output. This can either be the id of the document (int),
    * multiple document ids (array of int), a query result describing a document (QueryResult) or multiple query results describing
    * multiple documents (array of QueryResult).
-   * @param $sendHeaders If true, the HTTP headers 'Content-type' and 'Content-disposition' are sent via header()
+   * @param boolean $sendHeaders If true, the HTTP headers 'Content-type' and 'Content-disposition' are sent via header()
    * @param int $width The width to which the image should be resized (optional).
    * @param int $height The height to which the image should be resized (optional).
    * @param string $resizeMode Specifies how the image should be resized (optional).
@@ -1441,7 +1450,7 @@ class WebApi
     }
     else
     {
-      throw new \InvalidArgumentException('Invalid value for parameter "contacts". Expected (array of) int or QueryResult, got ' . gettype($entry));
+      throw new \InvalidArgumentException('Invalid value for parameter "contacts". Expected (array of) int or QueryResult, got ' . gettype($contacts));
     }
   }
 }

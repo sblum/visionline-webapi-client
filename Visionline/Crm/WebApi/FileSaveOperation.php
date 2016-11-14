@@ -116,6 +116,7 @@ class FileSaveOperation extends FileOperation
    * @param int $width The width to which an image should be resized
    * @param int $height The height to which an image should be resized
    * @param string $resizeMode Specifies how an image should be resized
+   * @return bool Whether the file should be downloaded
    * @see \Visionline\Crm\WebApi\FileOperation::shouldDownload()
    */
   protected function shouldDownload(QueryResult $document, $width, $height, $resizeMode)
@@ -178,6 +179,7 @@ class FileSaveOperation extends FileOperation
    * @param string $resizeMode Specifies how an image should be resized
    * @param string $contentType The content type of the file
    * @param string $extension The file extension of the file
+   * @return string The filename
    */
   private function getFilename($id, $width = null, $height = null, $resizeMode = null, $contentType = null, $extension = null)
   {

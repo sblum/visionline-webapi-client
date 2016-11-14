@@ -103,23 +103,16 @@ class CacheEntry
   }
   
   /**
-   * Returns the key under which this cache entry can be stored or retrieved.
-   * @return string The key under which this cache entry can be stored or retrieved.
-   */
-  public function getKey()
-  {
-    return CacheEntry::computeKey($this->type, $this->id);
-  }
-  
-  /**
    * Computes the key under which a cache entry can be stored or retrieved.
    * @param string $type The entity type
    * @param string $id the entity id
+   * @param string $language the language
+   * @param bool $return_ids Whether the cache entry contains IDs instead of values for relation fields
    * @return string The key under which a cache entry can be stored or retrieved.
    */
-  public static function computeKey($type, $id)
+  public static function computeKey($type, $id, $language, $return_ids)
   {
-    return $type . '#' . $id;
+    return $type . '#' . $id . '-' . strtolower($language) . ($return_ids ? '-ids' : '');
   }
 }
 
