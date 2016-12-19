@@ -145,17 +145,17 @@ class Query
   /**
    * Runs this query by calling result() and returns the specified fields of the matching entities by calling WebApi::get for the query results.
    * @param array $fields An array of strings specifying which fields should be returned. The strings in the array have to be UTF-8 encoded.
-   * @param bool $return_ids Whether to return ids instead of values for relations
+   * @param array $idFields An array string string specifying fields that should be returned with their id value instead of their name. The strings in the array have to be UTF-8 encoded.
    * @return array A two-dimensional array that contains the results. The keys of the first level are
    * the ids of the entities. The keys of the second level are the field identifiers and values are
    * the corresponding field values. The field values are UTF-8 encoded strings.
    * @throws \SoapFault if a remote error occurs.
    * @see WebApi::get
    */
-  public function fields(array $fields, $return_ids = false)
+  public function fields(array $fields, array $idFields = array())
   {
   	$queryResults = $this->result();
-    $fieldResults = $this->webapi->get($this->type, $queryResults, $fields, $return_ids);
+    $fieldResults = $this->webapi->get($this->type, $queryResults, $fields, $idFields);
   	
   	uksort($fieldResults, function($id1, $id2) use ($queryResults) {
   		foreach ($queryResults as $queryResult)

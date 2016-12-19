@@ -31,10 +31,16 @@ class CacheEntry
   public $lastModified;
   
   /**
-   * The field values of the the entity
+   * The field values of the entity
    * @var array
    */
   public $fields;
+
+  /**
+   * The field values of the entity as ids
+   * @var array
+   */
+  public $idFields;
   
   /**
    * Create a cache entry
@@ -42,9 +48,10 @@ class CacheEntry
    * @param int $id The entity id
    * @param int $lastModified The date of the last modification of the entity
    * @param array $fields The field values of the the entity
+   * @param array $idFields The field values of the the entity containing ids instead of names
    * @throws \InvalidArgumentException If invalid arguments were supplied
    */
-  public function __construct($type, $id, $lastModified = null, $fields = array())
+  public function __construct($type, $id, $lastModified = null, $fields = array(), $idFields = array())
   {
     if (!isset($type))
     {
@@ -60,6 +67,18 @@ class CacheEntry
     $this->id = $id;
     $this->lastModified = $lastModified;
     $this->fields = $fields;
+    $this->idFields = $idFields;
+  }
+
+  /**
+   * Hook after deserialization
+   */
+  public function __wakeup()
+  {
+    // make sure $this->idFields is an array
+    if (!isset($this->idFields) || !$this->idFields) {
+      $this->idFields = array();
+    }
   }
   
   /**
@@ -98,22 +117,20 @@ class CacheEntry
     $result = new CacheEntry($this->type, $this->id);
     $result->lastModified = max($this->lastModified, $other->lastModified);
     $result->fields = array_merge($this->fields, $other->fields);
-    
+    $result->idFields = array_merge($this->idFields, $other->idFields);
+
     return $result;
   }
-  
+
   /**
    * Computes the key under which a cache entry can be stored or retrieved.
    * @param string $type The entity type
    * @param string $id the entity id
    * @param string $language the language
-   * @param bool $return_ids Whether the cache entry contains IDs instead of values for relation fields
    * @return string The key under which a cache entry can be stored or retrieved.
    */
-  public static function computeKey($type, $id, $language, $return_ids)
+  public static function computeKey($type, $id, $language)
   {
-    return $type . '#' . $id . '-' . strtolower($language) . ($return_ids ? '-ids' : '');
+    return $type . '#' . $id . '-' . strtolower($language);
   }
 }
-
-?>

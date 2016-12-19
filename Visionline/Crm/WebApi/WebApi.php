@@ -1175,24 +1175,24 @@ class WebApi
    * multiple ids of entities (array of int), a query result describing an entity (QueryResult) or multiple query results describing entities
    * (array of QueryResult)
    * @param array $fields The requested fields (array of string). The strings in this array have to be UTF-8 encoded.
-   * @param boolean $return_ids Whether to return ids instead of values for relations
+   * @param array $idFields The requested fields as ids (array of string). The strings in this array have to be UTF-8 encoded.
    * @return array A two-dimensional array that contains the results. The keys of the first level are
    * the ids of the entities. The keys of the second level are the field identifiers and values are
    * the corresponding field values.
    * @see EntityType
    * @see QueryResult
    */
-  public function get($type, array $which, array $fields, $return_ids = false)
+  public function get($type, array $which, array $fields, array $idFields = array())
   {
     $results = array();
     
     if (is_int($which))
     {
-      return $this->get($type, array($which), $fields, $return_ids);
+      return $this->get($type, array($which), $fields, $idFields);
     }
     else if ($which instanceof QueryResult)
     {
-      return $this->get($type, array($which), $fields, $return_ids);
+      return $this->get($type, array($which), $fields, $idFields);
     }
     else if (is_array($which))
     {
@@ -1219,19 +1219,19 @@ class WebApi
     }
       
     // If cache is available, read cache entries where possible
-    $getIds = $this->cacheRead($type, $results, $fields, $return_ids);
+    $getIds = $this->cacheRead($type, $results, $fields, $idFields);
     
     if (count($getIds) > 0)
     {
       $this->debug('get: Going to call _Get for ids = ', $getIds);
       
       // Call webservice
-      $getResults = $this->_Get($type, $getIds, $fields, $return_ids);
+      $getResults = $this->_Get($type, $getIds, $fields, $idFields);
 
       foreach ($getResults as $id => $fields)
       {
         // If cache is available, write cache entries
-        $this->cacheWrite($type, $id, $results[$id]->lastModified, $fields, $return_ids);
+        $this->cacheWrite($type, $id, $results[$id]->lastModified, $fields, $idFields);
         
         $results[$id] = $fields;
       }
@@ -1246,25 +1246,27 @@ class WebApi
    * @param int $id The entity id
    * @param int $lastModified The entitys last modification date
    * @param array $fields The entitys fields
-   * @param boolean $return_ids Whether the cache entry contains IDs instead of values for relation fields
+   * @param array $idFields The entity`s fields with ids instead of names
    */
-  private function cacheWrite($type, $id, $lastModified, $fields, $return_ids = false)
+  private function cacheWrite($type, $id, $lastModified, $fields, $idFields = array())
   {
     // If cache is available, store retrieved data
     if (isset($this->cache))
     {
+      // compute key
+      $key = CacheEntry::computeKey($type, $id, $this->language);
+
       // Create cache entry
-      $cacheEntry = new CacheEntry($type, $id, $lastModified, $fields, $return_ids);
+      $cacheEntry = new CacheEntry($type, $id, $lastModified, $fields, $idFields);
     
       // If an up-to-date cache entry already exists, merge it with the new one
-      $oldCacheEntry = $this->cache->get($cacheEntry->getKey($this->language));
+      $oldCacheEntry = $this->cache->get($key);
       if ($oldCacheEntry != null && $oldCacheEntry->lastModified >= $cacheEntry->lastModified)
       {
         $cacheEntry = $cacheEntry->merge($oldCacheEntry);
       }
     
       // Put entry into cache
-      $key = $cacheEntry->getKey($this->language);
       $this->cache->put($key, $cacheEntry);
     
       $this->debug('get: Stored cache entry for key = ', $key);
@@ -1454,5 +1456,3 @@ class WebApi
     }
   }
 }
-
-?>
