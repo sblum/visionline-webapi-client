@@ -16,4 +16,10 @@ class CreateEnquiryResult
    * @var array
    */
   public $warnings;
+
+  /**
+   * The enquiry that was created.
+   * @var StoredEnquiry
+   */
+  public $enquiry;
 }
