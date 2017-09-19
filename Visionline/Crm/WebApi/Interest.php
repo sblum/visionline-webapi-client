@@ -12,6 +12,12 @@ namespace Visionline\Crm\WebApi;
 class Interest
 {
   /**
+   * ID des Interesses
+   *@var int
+   */
+  public $id;
+
+  /**
    * ID des Kontakts
    * @var int
    */

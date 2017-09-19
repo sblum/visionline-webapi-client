@@ -130,7 +130,8 @@ class WebApi
             'EnumFieldsResult' => __NAMESPACE__ . '\EnumFieldsResult',
             'RelatedQueryResult' => __NAMESPACE__ . '\RelatedQueryResult',
             'RelatedRoleQueryResult' => __NAMESPACE__ . '\RelatedRoleQueryResult',
-            'Interest' => __NAMESPACE__ . '\Interest'
+            'Interest' => __NAMESPACE__ . '\Interest',
+            'StoredEntity' => __NAMESPACE__ . '\StoredEntity'
         ),
     ));
   }
@@ -458,7 +459,33 @@ class WebApi
     }
     return $result;
   }
-  
+
+  /**
+   * Calls the webservice method GetInterests with the specified arguments
+   * @param array $enquiryIds The IDs of the enquiries
+   * @return StoredEnquiry[] describing the interests
+   * @throws \Exception if a remote error occurs
+   */
+  public function _GetEnquiries($enquiryIds)
+  {
+    try
+    {
+      $result = $this->client->GetEnquiries($this->connection, $enquiryIds);
+
+      $this->debug('GetEnquiries - Result is', $result);
+      $this->debug('GetEnquiries - Request was', $this->client->__getLastRequest());
+      $this->debug('GetEnquiries - Response was', $this->client->__getLastResponse());
+    }
+    catch (\Exception $e)
+    {
+      $this->debug('GetEnquiries - Request was', $this->client->__getLastRequest());
+      $this->debug('GetEnquiries - Response was', $this->client->__getLastResponse());
+
+      throw $e;
+    }
+    return $result;
+  }
+
   /**
    * Calls the webservice method Get with the specified arguments
    * @param string $type the entity type
@@ -1453,6 +1480,51 @@ class WebApi
     else
     {
       throw new \InvalidArgumentException('Invalid value for parameter "contacts". Expected (array of) int or QueryResult, got ' . gettype($contacts));
+    }
+  }
+
+  /**
+   * Retrieves the specified enquiries
+   * @param int|QueryResult|array $enquiries The enquiries
+   * @return array of StoredEnquiry: the enquiries
+   */
+  public function getEnquiries($enquiries)
+  {
+    if (is_int($enquiries))
+    {
+      $this->getEnquiries(array($enquiries));
+    }
+    else if ($enquiries instanceof QueryResult)
+    {
+      $this->getEnquiries(array($enquiries));
+    }
+    else if (is_array($enquiries))
+    {
+      $ids = array();
+
+      // Initialize $ids
+      foreach ($enquiries as $entry)
+      {
+        if (is_int($entry))
+        {
+          $ids[] = $entry;
+        }
+        else if ($entry instanceof QueryResult)
+        {
+          $ids[] = $entry->id;
+        }
+        else
+        {
+          throw new \InvalidArgumentException('Invalid value for parameter "$enquiries". Expected (array of) int or QueryResult, got ' . gettype($entry));
+        }
+      }
+
+      // Call webservice method
+      return $this->_GetEnquiries($ids);
+    }
+    else
+    {
+      throw new \InvalidArgumentException('Invalid value for parameter "$enquiries". Expected (array of) int or QueryResult, got ' . gettype($enquiries));
     }
   }
 }

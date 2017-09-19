@@ -42,8 +42,13 @@ class EntityType
 	 * Constant for entity-type 'Aktivität'
 	 */
   const Aktivität = "Aktivität";
-  
-	/**
+
+  /**
+   * Constant for entity-type 'Anfrage'
+   */
+  const Anfrage = "Anfrage";
+
+  /**
 	 * Empty private constructor
 	 */
 	private function __construct() {}

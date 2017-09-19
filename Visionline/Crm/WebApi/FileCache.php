@@ -77,6 +77,7 @@ class FileCache implements Cache
    * @param string $key The key under which the data is stored
    * @return mixed The data stored under the specified key.
    * @see \Visionline\Crm\WebApi\Cache::get()
+   * @throws \Exception if an error occurs
    */
   public function get($key)
   {
@@ -118,6 +119,7 @@ class FileCache implements Cache
    * @param string $key The key under which to store the data
    * @param mixed $data The data to store
    * @see \Visionline\Crm\WebApi\Cache::put()
+   * @throws \Exception if an error occurs
    */
   public function put($key, $data)
   {
@@ -144,4 +146,3 @@ class FileCache implements Cache
   }
 }
 
-?>
