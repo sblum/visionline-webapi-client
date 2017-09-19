@@ -3,7 +3,8 @@ visionline-webapi-client
 
 Extraction of the visionline webapi client phar for the crm from visionline.at
 
-Visionline is CRM, which offers a PHP phar for the webapi client.See https://app2.visionline.at/Help/
+Visionline is CRM, which offers a PHP phar for the webapi client.
+See https://app2.visionline.at/Help/
 
 1. Add to your composer.json and specify the uri of the phar
 	
@@ -13,17 +14,17 @@ Visionline is CRM, which offers a PHP phar for the webapi client.See https://app
     		// ...
     		"require": {
         		// ...
-        		"sebastianblum/visionline-webapi-client": "~1.0"
+        		"sebastianblum/visionline-webapi-client": "^1.0"
     		}
  		}
 
 
-2. Use composer to download and install the libary
+2. Use composer to download and install the library
 
 		$ php composer.phar update sebastianblum/visionline-webapi-client
 
 	
-3. Use the libary 
+3. Use the library 
 
 		// example.php
 
@@ -32,5 +33,7 @@ Visionline is CRM, which offers a PHP phar for the webapi client.See https://app
 		
 			$connection = new \Visionline\Crm\WebApi\Connection(...);
 			$webapi = new \Visionline\Crm\WebApi\WebApi(...);
+			
+This library is used at the Terrafinanz Website https://www.terrafinanz.de/ to communicate with the Visionline CRM.		
 		
 		
