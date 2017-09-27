@@ -4,7 +4,7 @@
     "license": "MIT",
     "description": "Extraction of the visionline webapi client for the crm from visionline.at",
     "autoload": {
-	    "psr-4": { "Visionline\\": "" }
+	    "psr-4": { "Visionline\\": "Visionline" }
 	},
     "require": {
     	"php": ">=5.3.3"
