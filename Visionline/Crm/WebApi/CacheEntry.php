@@ -89,9 +89,9 @@ class CacheEntry
     /**
      * Merges this cache entry with another cache entry and returns the result. This cache entry and the specified other cache entry are not modified.
      *
-     * @param CacheEntry $other The cache entry to be merged.
+     * @param CacheEntry $other the cache entry to be merged
      *
-     * @throws \InvalidArgumentException If no other cache entry was supplied or its properties are not set correctly.
+     * @throws \InvalidArgumentException if no other cache entry was supplied or its properties are not set correctly
      *
      * @return \Visionline\Crm\WebApi\CacheEntry The merged cache entry
      */
@@ -132,7 +132,7 @@ class CacheEntry
      * @param string $id       the entity id
      * @param string $language the language
      *
-     * @return string The key under which a cache entry can be stored or retrieved.
+     * @return string the key under which a cache entry can be stored or retrieved
      */
     public static function computeKey($type, $id, $language)
     {

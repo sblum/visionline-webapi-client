@@ -17,7 +17,7 @@ interface Cache
      *
      * @param string $key The key under which the data is stored
      *
-     * @return mixed The data stored under the specified key.
+     * @return mixed the data stored under the specified key
      */
     public function get($key);
 

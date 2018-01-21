@@ -101,7 +101,7 @@ class WebApi
      *
      * @param string     $endpoint   The endpoint (URL) of the CRM-VISIONLINE WebApi Webservice, e.g. https://app2.visionline.at/WebApi/WebApi.aspx?WSDL
      * @param Connection $connection The connection information to the CRM-VISIONLINE system
-     * @param array      $options    Set the specified options.
+     * @param array      $options    set the specified options
      *
      * @throws \InvalidArgumentException If an unknown option was provided in $options
      */
@@ -148,7 +148,7 @@ class WebApi
      * Returns the debug messages that have been collected since
      * the last call to this method.
      *
-     * @return array The debug messages.
+     * @return array the debug messages
      */
     public function getDebugMessages()
     {
@@ -223,7 +223,7 @@ class WebApi
      * @param int    $first   index of the beginning of the result set
      * @param int    $max     maximum length of the result set
      *
-     * @return array an array of objects with the properties 'id' and 'lastModified'.
+     * @return array an array of objects with the properties 'id' and 'lastModified'
      *
      * @throws \Exception if a remote error occurs
      */
@@ -254,7 +254,7 @@ class WebApi
      * @param string $type the entity type
      * @param int[]  $ids  the entity id
      *
-     * @return QueryResult an array of objects with the properties 'id' and 'lastModified'.
+     * @return QueryResult an array of objects with the properties 'id' and 'lastModified'
      *
      * @throws \Exception if a remote error occurs
      */
@@ -1228,11 +1228,11 @@ class WebApi
      * Reads a cache entry.
      *
      * @param string $type       The entity type
-     * @param array  $results    Results found in the cache are set to this array.
+     * @param array  $results    results found in the cache are set to this array
      * @param array  $fields     The entitys fields
      * @param bool   $return_ids Whether the cache entry contains IDs instead of values for relation fields
      *
-     * @return array The ids of the entities that could not be answered from the cache.
+     * @return array the ids of the entities that could not be answered from the cache
      */
     private function cacheRead($type, &$results, $fields, $return_ids = false)
     {
@@ -1287,9 +1287,9 @@ class WebApi
      * @param array|int $documents  The document(s) for which the content should be returned. This can either be the id of the document (int),
      *                              multiple document ids (array of int), a query result describing a document (QueryResult) or multiple query results describing
      *                              multiple documents (array of QueryResult).
-     * @param int       $width      The width to which the image should be resized (optional).
-     * @param int       $height     The height to which the image should be resized (optional).
-     * @param string    $resizeMode Specifies how the image should be resized (optional).
+     * @param int       $width      the width to which the image should be resized (optional)
+     * @param int       $height     the height to which the image should be resized (optional)
+     * @param string    $resizeMode specifies how the image should be resized (optional)
      *
      * @return string The file contents
      */
@@ -1305,13 +1305,13 @@ class WebApi
      * This method should not be called for large files from within an enduser-request, because it blocks until the whole file has been retrieved from the CRM-VISIONLINE system.
      *
      * @param int|QueryResult $document      The document for which the content should be saved. This can either be the id of the document (int) or query result describing a document.
-     * @param string          $directory     The directory to which the file should be written.
-     * @param bool            $forceDownload If true, the file is downloaded even if it already exists in the specified directory and is up-to-date regarding the lastModified date (optional).
-     * @param int             $width         The width to which the image should be resized (optional).
-     * @param int             $height        The height to which the image should be resized (optional).
-     * @param string          $resizeMode    Specifies how the image should be resized (optional).
+     * @param string          $directory     the directory to which the file should be written
+     * @param bool            $forceDownload if true, the file is downloaded even if it already exists in the specified directory and is up-to-date regarding the lastModified date (optional)
+     * @param int             $width         the width to which the image should be resized (optional)
+     * @param int             $height        the height to which the image should be resized (optional)
+     * @param string          $resizeMode    specifies how the image should be resized (optional)
      *
-     * @return string The filename under which the contents have been saved.
+     * @return string the filename under which the contents have been saved
      *
      * @see saveFiles
      */
@@ -1327,13 +1327,13 @@ class WebApi
      * This method should not be called for large files from within an enduser-request, because it blocks until the whole file has been retrieved from the CRM-VISIONLINE system.
      *
      * @param array  $documents     The documents for which the content should be saved. This can either be ids or query results.
-     * @param string $directory     The directory to which the file should be written.
-     * @param bool   $forceDownload If true, the file is downloaded even if it already exists in the specified directory and is up-to-date regarding the lastModified date (optional).
-     * @param int    $width         The width to which the images should be resized (optional).
-     * @param int    $height        The height to which the images should be resized (optional).
-     * @param string $resizeMode    Specifies how the images should be resized (optional).
+     * @param string $directory     the directory to which the file should be written
+     * @param bool   $forceDownload if true, the file is downloaded even if it already exists in the specified directory and is up-to-date regarding the lastModified date (optional)
+     * @param int    $width         the width to which the images should be resized (optional)
+     * @param int    $height        the height to which the images should be resized (optional)
+     * @param string $resizeMode    specifies how the images should be resized (optional)
      *
-     * @return array The filenames under which the files have been saved, where the key is the documents id.
+     * @return array the filenames under which the files have been saved, where the key is the documents id
      */
     public function saveFiles($documents, $directory, $forceDownload = false, $width = null, $height = null, $resizeMode = null)
     {
@@ -1352,9 +1352,9 @@ class WebApi
      *                               multiple document ids (array of int), a query result describing a document (QueryResult) or multiple query results describing
      *                               multiple documents (array of QueryResult).
      * @param bool      $sendHeaders If true, the HTTP headers 'Content-type' and 'Content-disposition' are sent via header()
-     * @param int       $width       The width to which the image should be resized (optional).
-     * @param int       $height      The height to which the image should be resized (optional).
-     * @param string    $resizeMode  Specifies how the image should be resized (optional).
+     * @param int       $width       the width to which the image should be resized (optional)
+     * @param int       $height      the height to which the image should be resized (optional)
+     * @param string    $resizeMode  specifies how the image should be resized (optional)
      * @param bool      $attachment  If true, the HTTP header 'Content-disposition' is set to 'attachment'
      */
     public function passthruFile($document, $sendHeaders = false, $width = null, $height = null, $resizeMode = null, $attachment = false)
