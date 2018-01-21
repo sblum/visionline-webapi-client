@@ -1,6 +1,16 @@
 <?php
 
+$finder = PhpCsFixer\Finder::create()
+    ->in(__DIR__)
+    ->ignoreDotFiles(true)
+    ->ignoreVCS(true)
+    ->exclude['vendor'])
+    ->files()
+    ->name('*.php')
+;
+
 return PhpCsFixer\Config::create()
+    ->setFinder($finder)
     ->setRiskyAllowed(true)
     ->setRules([
         '@Symfony' => true,
