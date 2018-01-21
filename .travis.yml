@@ -3,7 +3,12 @@ php:
   - '7.1'
   - '7.2'
   - nightly
-  
+ 
+before_install:
+  - composer require friendsofphp/php-cs-fixer:^2.10
   
 install:
   - composer install
+  
+script:
+  - vendor/bin/php-cs-fixer --dry-run --diff -v fix 
