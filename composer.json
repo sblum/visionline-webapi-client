@@ -7,6 +7,6 @@
 	    "psr-4": { "Visionline\\": "Visionline" }
 	},
     "require": {
-    	"php": ">=5.3.3"
+    	"php": ">=7.1"
     }
 }
