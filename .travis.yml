@@ -3,7 +3,6 @@ php:
   - '7.2'
  
 before_install:
-  - composer require friendsofphp/php-cs-fixer:^2.10
   - rm -f ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini
   
 install:
