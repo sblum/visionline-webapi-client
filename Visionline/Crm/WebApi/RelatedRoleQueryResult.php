@@ -1,7 +1,6 @@
 <?php
 /**
- * Defines the class RelatedQueryResult
- * @package pagepackage
+ * Defines the class RelatedQueryResult.
  */
 
 namespace Visionline\Crm\WebApi;
@@ -11,24 +10,25 @@ namespace Visionline\Crm\WebApi;
  */
 class RelatedRoleQueryResult extends RelatedQueryResult
 {
-  /**
-   * The role of the relation
-   * @var string
-   */
-  public $role;
-  
-  
-  /**
-   * Create a query result
-   * @param int $id The id of the entity
-   * @param int $lastModified The date of the last modification of the entity.
-   * @param int $relatedTo The id of the entity to which this result is related
-   * @param string $role The role of the relation to the entity
-   */
-  public function _construct($id, $lastModified = null, $relatedTo = null, $role = null)
-  {
-    parent::__construct($id, $lastModified, $relatedTo);
-    
-    $this->role = $role;
-  }
+    /**
+     * The role of the relation.
+     *
+     * @var string
+     */
+    public $role;
+
+    /**
+     * Create a query result.
+     *
+     * @param int    $id           The id of the entity
+     * @param int    $lastModified The date of the last modification of the entity.
+     * @param int    $relatedTo    The id of the entity to which this result is related
+     * @param string $role         The role of the relation to the entity
+     */
+    public function _construct($id, $lastModified = null, $relatedTo = null, $role = null)
+    {
+        parent::__construct($id, $lastModified, $relatedTo);
+
+        $this->role = $role;
+    }
 }

@@ -1,7 +1,6 @@
 <?php
 /**
- * Defines the class RelatedQueryResult
- * @package pagepackage
+ * Defines the class RelatedQueryResult.
  */
 
 namespace Visionline\Crm\WebApi;
@@ -11,34 +10,34 @@ namespace Visionline\Crm\WebApi;
  */
 class RelatedQueryResult extends QueryResult
 {
-  /**
-   * The id of the entity to which this result is related
-   * @var int
-   */
-  public $relatedTo;
-  
-  
-  /**
-   * Create a query result
-   * @param int $id The id of the entity
-   * @param int $lastModified The date of the last modification of the entity.
-   * @param int The id of the entity to which this result is related
-   */
-  public function __construct($id, $lastModified = null, $relatedTo = null)
-  {
-    parent::__construct($id, $lastModified);
-    
-    $this->relatedTo = $relatedTo;
-  }
-  
-  /**
-   * Initializes a query result after being constructed by SoapClient.
-   */
-  public function init()
-  {
-    if ($this->lastModified != null)
+    /**
+     * The id of the entity to which this result is related.
+     *
+     * @var int
+     */
+    public $relatedTo;
+
+    /**
+     * Create a query result.
+     *
+     * @param int $id           The id of the entity
+     * @param int $lastModified The date of the last modification of the entity.
+     * @param int The id of the entity to which this result is related
+     */
+    public function __construct($id, $lastModified = null, $relatedTo = null)
     {
-      $this->lastModified = strtotime($this->lastModified);
+        parent::__construct($id, $lastModified);
+
+        $this->relatedTo = $relatedTo;
     }
-  }
+
+    /**
+     * Initializes a query result after being constructed by SoapClient.
+     */
+    public function init()
+    {
+        if (null != $this->lastModified) {
+            $this->lastModified = \strtotime($this->lastModified);
+        }
+    }
 }

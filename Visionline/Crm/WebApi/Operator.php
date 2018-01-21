@@ -1,171 +1,194 @@
 <?php
 /**
- * Defines the class Operator
- * @package pagepackage
+ * Defines the class Operator.
  */
 
 namespace Visionline\Crm\WebApi;
 
 /**
  * Defines constants for operators of an expression.
+ *
  * @see Expression
  */
 class Operator
 {
     /**
-     * Equal
+     * Equal.
+     *
      * @var string
      */
     const Eq = 'Eq';
 
     /**
-     * Not equal
+     * Not equal.
+     *
      * @var string
      */
     const NotEq = 'NotEq';
 
     /**
-     * Less than
+     * Less than.
+     *
      * @var string
      */
     const Lt = 'Lt';
 
     /**
-     * Less than or equal
+     * Less than or equal.
+     *
      * @var string
      */
     const Le = 'Le';
 
     /**
-     * Greater than
+     * Greater than.
+     *
      * @var string
      */
     const Gt = 'Gt';
 
     /**
-     * Greater than or equal
+     * Greater than or equal.
+     *
      * @var string
      */
     const Ge = 'Ge';
 
     /**
-     * One of
+     * One of.
+     *
      * @var string
      */
     const OneOf = 'OneOf';
 
     /**
-     * All of
+     * All of.
+     *
      * @var string
      */
     const AllOf = 'AllOf';
 
     /**
-     * None of
+     * None of.
+     *
      * @var string
      */
     const NoneOf = 'NoneOf';
 
     /**
-     * Is true
+     * Is true.
+     *
      * @var string
      */
     const IsTrue = 'IsTrue';
 
     /**
-     * Is false
+     * Is false.
+     *
      * @var string
      */
     const IsFalse = 'IsFalse';
 
     /**
-     * StartsWith
+     * StartsWith.
+     *
      * @var string
      */
     const StartsWith = 'StartsWith';
 
     /**
-     * Is empty
+     * Is empty.
+     *
      * @var string
      */
     const IsEmpty = 'IsEmpty';
 
     /**
-     * Is not empty
+     * Is not empty.
+     *
      * @var string
      */
     const IsNotEmpty = 'IsNotEmpty';
-    
+
     /**
-     * Is null
+     * Is null.
+     *
      * @var string
      */
     const IsNull = 'IsNull';
-    
+
     /**
-     * Is not null
+     * Is not null.
+     *
      * @var string
      */
     const IsNotNull = 'IsNotNull';
 
     /**
-     * Located in geographical region
+     * Located in geographical region.
+     *
      * @var string
      */
     const LocatedInGeo = 'LocatedInGeo';
 
     /**
-     * Located in geographical location (position + radius)
+     * Located in geographical location (position + radius).
+     *
      * @var string
      */
     const LocatedInGeoPos = 'LocatedInGeoPos';
 
     /**
-     * Located in political region
+     * Located in political region.
+     *
      * @var string
      */
     const LocatedInPol = 'LocatedInPol';
 
     /**
-     * Not located in political region
+     * Not located in political region.
+     *
      * @var string
      */
     const NotLocatedInPol = 'NotLocatedInPol';
 
     /**
-     * In hierarchy
+     * In hierarchy.
+     *
      * @var string
      */
     const InHierarchy = 'InHierarchy';
 
     /**
-     * Date is in current month
+     * Date is in current month.
+     *
      * @var string
      */
     const InCurrentMonth = 'InCurrentMonth';
 
     /**
-     * Date is in previous month
+     * Date is in previous month.
+     *
      * @var string
      */
     const InPreviousMonth = 'InPreviousMonth';
-    
+
     /**
-     * Date is in current year
+     * Date is in current year.
+     *
      * @var string
      */
     const InCurrentYear = 'InCurrentYear';
-    
+
     /**
-     * Date is in previous year
+     * Date is in previous year.
+     *
      * @var string
      */
     const InPreviousYear = 'InPreviousYear';
-    
+
     /**
-     * String contains another string
+     * String contains another string.
      */
     const Contains = 'Contains';
 }
-
-?>

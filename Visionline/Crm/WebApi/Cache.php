@@ -1,7 +1,6 @@
 <?php
 /**
- * Defines the interface Cache
- * @package pagepackage
+ * Defines the interface Cache.
  */
 
 namespace Visionline\Crm\WebApi;
@@ -13,19 +12,20 @@ namespace Visionline\Crm\WebApi;
  */
 interface Cache
 {
-  /**
-   * Returns the data stored under the specified key.
-   * @param string $key The key under which the data is stored
-   * @return mixed The data stored under the specified key.
-   */
-  public function get($key);
-  
-  /**
-   * Stores the data under the specified key
-   * @param string $key The key under which to store the data
-   * @param mixed $data The data to store
-   */
-  public function put($key, $data);
-}
+    /**
+     * Returns the data stored under the specified key.
+     *
+     * @param string $key The key under which the data is stored
+     *
+     * @return mixed The data stored under the specified key.
+     */
+    public function get($key);
 
-?>
+    /**
+     * Stores the data under the specified key.
+     *
+     * @param string $key  The key under which to store the data
+     * @param mixed  $data The data to store
+     */
+    public function put($key, $data);
+}
