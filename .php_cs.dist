@@ -1,0 +1,17 @@
+<?php
+
+return PhpCsFixer\Config::create()
+    ->setRiskyAllowed(true)
+    ->setRules([
+        '@Symfony' => true,
+        '@Symfony:risky' => true,
+        'align_multiline_comment' => true,
+        'array_syntax' => ['syntax' => 'short'],
+        'native_function_invocation' => true,
+        'no_multiline_whitespace_before_semicolons' => true,
+        'no_short_echo_tag' => true,
+        'ordered_imports' => true,
+        'combine_consecutive_issets' => true,
+        'combine_consecutive_unsets' => true,
+    ])
+;
