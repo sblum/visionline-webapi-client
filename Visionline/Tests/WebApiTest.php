@@ -2,8 +2,8 @@
 
 namespace Visionline\Tests\Crm\WebApi;
 
-use Visionline\Crm\WebApi\Connection;
 use PHPUnit\Framework\TestCase;
+use Visionline\Crm\WebApi\Connection;
 use Visionline\Crm\WebApi\WebApi;
 
 class WebApiTest extends TestCase
