@@ -1,14 +1,20 @@
 language: php
+
 php:
   - '7.1'
   - '7.2'
   - 'nightly'
 
+git:
+  depth: false
+  submodules: false
+
 before_install:
-  - rm -f ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini
+  - stty cols 120
+  - phpenv config-rm xdebug.ini
   
 install:
-  - composer install
+  - composer update
   
 script:
   - vendor/bin/php-cs-fixer --dry-run --diff -v fix 
