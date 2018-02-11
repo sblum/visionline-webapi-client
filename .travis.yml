@@ -21,11 +21,11 @@ matrix:
 before_install:
   - stty cols 120
   - phpenv config-rm xdebug.ini || echo "xdebug.ini not found"
-  - if [[ "RUN_CS_FIXER" != "true" ]]; composer remove friendsofphp/php-cs-fixer; fi;
+  - if [[ "$RUN_CS_FIXER" != "true" ]]; composer remove friendsofphp/php-cs-fixer; fi;
   
 install:
   - composer update
   
 script:
   - vendor/bin/phpunit
-  - if [[ "RUN_CS_FIXER" == "true" ]]; then vendor/bin/php-cs-fixer --dry-run --diff -v fix; fi;
+  - if [[ "$RUN_CS_FIXER" == "true" ]]; then vendor/bin/php-cs-fixer --dry-run --diff -v fix; fi;
