@@ -14,9 +14,9 @@ matrix:
   include:
     - php: 7.1
     - php: 7.2
-    - php: 7.2
+    - php: 7.1
       env: RUN_CS_FIXER="true"
-    - php: 7.2
+    - php: 7.1
       env:
         - ENABLE_CODE_COVERAGE="true"
         - PHPUNIT_OPTIONS=" --coverage-text --coverage-clover build/logs/clover.xml"
