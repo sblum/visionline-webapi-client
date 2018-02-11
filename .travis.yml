@@ -21,7 +21,7 @@ matrix:
 before_install:
   - stty cols 120
   - phpenv config-rm xdebug.ini || echo "xdebug.ini not found"
-  - if [[ "$RUN_CS_FIXER" != "true" ]]; then composer remove friendsofphp/php-cs-fixer; fi;
+  - if [[ "$RUN_CS_FIXER" != "true" ]]; then composer remove friendsofphp/php-cs-fixer  --dev --no-update; fi;
   
 install:
   - composer update
