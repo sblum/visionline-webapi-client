@@ -2,6 +2,7 @@ language: php
 
 env:
   global:
+    - ENABLE_CODE_COVERAGE="false"
     - RUN_CS_FIXER="false"
 
 git:
@@ -15,6 +16,10 @@ matrix:
     - php: 7.2
     - php: 7.2
       env: RUN_CS_FIXER="true"
+    - php: 7.2
+      env:
+        - ENABLE_CODE_COVERAGE="true"
+        - PHPUNIT_OPTIONS=" --coverage-text --coverage-clover build/logs/clover.xml"
     - php: nightly
 
 
@@ -22,10 +27,14 @@ before_install:
   - stty cols 120
   - phpenv config-rm xdebug.ini || echo "xdebug.ini not found"
   - if [[ "$RUN_CS_FIXER" != "true" ]]; then composer remove friendsofphp/php-cs-fixer  --dev --no-update; fi;
+  - if [[ "$ENABLE_CODE_COVERAGE" != "true" && "$TRAVIS_EVENT_TYPE" != "cron" ]]; then travis_retry composer require satooshi/php-coveralls:^2.0 --no-update $COMPOSER_FLAGS; fi;
   
 install:
   - composer update
   
 script:
-  - vendor/bin/phpunit
+  - vendor/bin/phpunit $PHPUNIT_OPTIONS
   - if [[ "$RUN_CS_FIXER" == "true" ]]; then vendor/bin/php-cs-fixer --dry-run --diff -v fix; fi;
+
+after_success:
+  - if [[ "$ENABLE_CODE_COVERAGE" == "true" && "$TRAVIS_EVENT_TYPE" == "cron" ]]; then php vendor/bin/coveralls -v --config .coveralls.yml; fi;
