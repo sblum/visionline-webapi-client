@@ -56,4 +56,9 @@ class CacheEntryTest extends TestCase
         $this->assertSame(['field1', 'field2', 'secondField'], $newCacheEntry->fields);
         $this->assertSame(['idField', 'secondIdField'], $newCacheEntry->idFields);
     }
+
+    public function testComputeKey()
+    {
+        $this->assertSame('type#123-de', CacheEntry::computeKey('type', 123, 'de'));
+    }
 }

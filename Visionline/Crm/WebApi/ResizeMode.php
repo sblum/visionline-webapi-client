@@ -26,11 +26,4 @@ abstract class ResizeMode
      * @var string
      */
     const Crop = 'Crop';
-
-    /**
-     * Private empty constructor.
-     */
-    private function __construct()
-    {
-    }
 }
