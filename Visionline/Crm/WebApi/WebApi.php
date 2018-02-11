@@ -521,8 +521,6 @@ class WebApi
         try {
             $getResults = $this->client->Get($this->connection, $type, $ids, $fields, $this->language, $idFields);
 
-            \file_put_contents('/Users/sebastianblum/Downloads/'.\implode('.', $ids).'.txt', \print_r($getResults, true));
-
             $this->debug('Get - Result is', $getResults);
             $this->debug('Get - Request was', $this->client->__getLastRequest());
             $this->debug('Get - Response was', $this->client->__getLastResponse());
