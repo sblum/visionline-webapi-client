@@ -1,20 +1,30 @@
 language: php
 
-php:
-  - '7.1'
-  - '7.2'
-  - 'nightly'
+env:
+  global:
+    - RUN_CS_FIXER="false"
 
 git:
   depth: false
   submodules: false
 
+matrix:
+  fast_finish: true
+  include:
+    - php: 7.1
+    - php: 7.2
+      env: RUN_CS_FIXER="true"
+    - php: 'nightly'
+
+
 before_install:
   - stty cols 120
   - phpenv config-rm xdebug.ini || echo "xdebug.ini not found"
+  - if [[ "RUN_CS_FIXER" != "true" ]]; composer remove friendsofphp/php-cs-fixer; fi;
   
 install:
   - composer update
   
 script:
-  - vendor/bin/php-cs-fixer --dry-run --diff -v fix 
+  - vendor/bin/phpunit
+  - if [[ "RUN_CS_FIXER" == "true" ]]; then vendor/bin/php-cs-fixer --dry-run --diff -v fix; fi;
