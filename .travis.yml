@@ -25,7 +25,7 @@ matrix:
 
 before_install:
   - stty cols 120
-  - phpenv config-rm xdebug.ini || echo "xdebug.ini not found"
+  - if [[ "$ENABLE_CODE_COVERAGE" == "false" ]]; then phpenv config-rm xdebug.ini || echo "xdebug.ini not found"; fi;
   - if [[ "$RUN_CS_FIXER" != "true" ]]; then composer remove friendsofphp/php-cs-fixer --dev --no-update; fi;
   - if [[ "$ENABLE_CODE_COVERAGE" == "true" ]]; then composer require satooshi/php-coveralls:^2.0 --dev --no-update; fi;
   
