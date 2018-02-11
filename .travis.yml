@@ -27,7 +27,7 @@ before_install:
   - stty cols 120
   - phpenv config-rm xdebug.ini || echo "xdebug.ini not found"
   - if [[ "$RUN_CS_FIXER" != "true" ]]; then composer remove friendsofphp/php-cs-fixer  --dev --no-update; fi;
-  - if [[ "$ENABLE_CODE_COVERAGE" != "true" && "$TRAVIS_EVENT_TYPE" != "cron" ]]; then travis_retry composer require satooshi/php-coveralls:^2.0 --no-update $COMPOSER_FLAGS; fi;
+  - if [[ "$ENABLE_CODE_COVERAGE" == "true" && "$TRAVIS_EVENT_TYPE" != "cron" ]]; then travis_retry composer require satooshi/php-coveralls:^2.0 --no-update $COMPOSER_FLAGS; fi;
   
 install:
   - composer update
