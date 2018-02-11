@@ -99,13 +99,14 @@ class WebApi
     /**
      * Creates a new CRM-VISIONLINE WebApi PHP Client.
      *
-     * @param string     $endpoint   The endpoint (URL) of the CRM-VISIONLINE WebApi Webservice, e.g. https://app2.visionline.at/WebApi/WebApi.aspx?WSDL
-     * @param Connection $connection The connection information to the CRM-VISIONLINE system
-     * @param array      $options    set the specified options
+     * @param string           $endpoint   The endpoint (URL) of the CRM-VISIONLINE WebApi Webservice, e.g. https://app2.visionline.at/WebApi/WebApi.aspx?WSDL
+     * @param Connection       $connection The connection information to the CRM-VISIONLINE system
+     * @param array            $options    set the specified options
+     * @param \SoapClient|null $client     The optional SoapClient
      *
      * @throws \InvalidArgumentException If an unknown option was provided in $options
      */
-    public function __construct($endpoint, Connection $connection, array $options)
+    public function __construct($endpoint, Connection $connection, array $options, \SoapClient $client = null)
     {
         $this->endpoint = $endpoint;
         $this->connection = $connection;
@@ -121,27 +122,31 @@ class WebApi
             }
         }
 
-        $this->client = new \SoapClient($this->endpoint, [
-        'trace' => $this->debug,
-        'exceptions' => true,
-        'connection_timeout' => $this->connection_timeout,
-        'features' => SOAP_SINGLE_ELEMENT_ARRAYS,
-        'soap_version' => SOAP_1_1,
-        'encoding' => 'utf-8',
-        'stream_context' => $this->stream_context,
-        'classmap' => [
-            'Expression' => __NAMESPACE__.'\Expression',
-            'Junction' => __NAMESPACE__.'\Junction',
-            'Order' => __NAMESPACE__.'\Order',
-            'Connection' => __NAMESPACE__.'\Connection',
-            'QueryResult' => __NAMESPACE__.'\QueryResult',
-            'EnumFieldsResult' => __NAMESPACE__.'\EnumFieldsResult',
-            'RelatedQueryResult' => __NAMESPACE__.'\RelatedQueryResult',
-            'RelatedRoleQueryResult' => __NAMESPACE__.'\RelatedRoleQueryResult',
-            'Interest' => __NAMESPACE__.'\Interest',
-            'StoredEntity' => __NAMESPACE__.'\StoredEntity',
-        ],
-    ]);
+        if (null === $client) {
+            $this->client = new \SoapClient($this->endpoint, [
+                'trace' => $this->debug,
+                'exceptions' => true,
+                'connection_timeout' => $this->connection_timeout,
+                'features' => SOAP_SINGLE_ELEMENT_ARRAYS,
+                'soap_version' => SOAP_1_1,
+                'encoding' => 'utf-8',
+                'stream_context' => $this->stream_context,
+                'classmap' => [
+                    'Expression' => __NAMESPACE__.'\Expression',
+                    'Junction' => __NAMESPACE__.'\Junction',
+                    'Order' => __NAMESPACE__.'\Order',
+                    'Connection' => __NAMESPACE__.'\Connection',
+                    'QueryResult' => __NAMESPACE__.'\QueryResult',
+                    'EnumFieldsResult' => __NAMESPACE__.'\EnumFieldsResult',
+                    'RelatedQueryResult' => __NAMESPACE__.'\RelatedQueryResult',
+                    'RelatedRoleQueryResult' => __NAMESPACE__.'\RelatedRoleQueryResult',
+                    'Interest' => __NAMESPACE__.'\Interest',
+                    'StoredEntity' => __NAMESPACE__.'\StoredEntity',
+                ],
+            ]);
+        } else {
+            $this->client = $client;
+        }
     }
 
     /**
@@ -500,10 +505,10 @@ class WebApi
     /**
      * Calls the webservice method Get with the specified arguments.
      *
-     * @param string $type       the entity type
-     * @param array  $ids        the ids of the requested entities (array of int)
-     * @param array  $fields     the requested fields (array of string)
-     * @param bool   $return_ids Whether to return ids instead of values for relations
+     * @param string $type     the entity type
+     * @param array  $ids      the ids of the requested entities (array of int)
+     * @param array  $fields   the requested fields (array of string)
+     * @param array  $idFields the requested fields as ids
      *
      * @throws \SoapFault if a remote error occurs
      *
@@ -511,10 +516,12 @@ class WebApi
      *               the ids of the entities. The keys of the second level are the field identifiers and values are
      *               the corresponding field values. The field values are UTF-8 encoded strings.
      */
-    public function _Get($type, array $ids, array $fields, $return_ids = false)
+    public function _Get($type, array $ids, array $fields, array $idFields)
     {
         try {
-            $getResults = $this->client->Get($this->connection, $type, $ids, $fields, $this->language, $return_ids);
+            $getResults = $this->client->Get($this->connection, $type, $ids, $fields, $this->language, $idFields);
+
+            \file_put_contents('/Users/sebastianblum/Downloads/'.\implode('.', $ids).'.txt', \print_r($getResults, true));
 
             $this->debug('Get - Result is', $getResults);
             $this->debug('Get - Request was', $this->client->__getLastRequest());
