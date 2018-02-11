@@ -2,10 +2,10 @@
 
 namespace Tests\Visionline\Crm\WebApi;
 
+use PHPUnit\Framework\TestCase;
 use Visionline\Crm\WebApi\QueryResult;
 use Visionline\Crm\WebApi\RelatedQueryResult;
 use Visionline\Crm\WebApi\RelatedRoleQueryResult;
-use PHPUnit\Framework\TestCase;
 
 class RelatedRoleQueryResultTest extends TestCase
 {

@@ -194,7 +194,7 @@ class WebApi
      *
      * @param mixed $message
      */
-    public function debug($message)
+    public function debug()
     {
         if (isset($this->debug) && $this->debug) {
             if (!isset($this->debugStartTime)) {
@@ -210,7 +210,7 @@ class WebApi
                 $message .= ' ';
             }
 
-            $this->debugMessages[] = $message;
+            $this->debugMessages[] = \rtrim($message);
         }
     }
 
