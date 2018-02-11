@@ -11,7 +11,7 @@ git:
 
 before_install:
   - stty cols 120
-  - phpenv config-rm xdebug.ini
+  - phpenv config-rm xdebug.ini || echo "xdebug.ini not found"
   
 install:
   - composer update
