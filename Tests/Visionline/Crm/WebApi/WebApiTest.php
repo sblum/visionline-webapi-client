@@ -1,6 +1,6 @@
 <?php
 
-namespace Visionline\Tests\Crm\WebApi;
+namespace Tests\Visionline\Crm\WebApi;
 
 use PHPUnit\Framework\TestCase;
 use Visionline\Crm\WebApi\Connection;

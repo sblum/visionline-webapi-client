@@ -6,6 +6,9 @@
     "autoload": {
 	    "psr-4": { "Visionline\\": "Visionline" }
 	},
+    "autoload-dev": {
+        "psr-4": { "Tests\\": "Tests" }
+    },
     "require": {
     	"php": ">=7.1"
     },

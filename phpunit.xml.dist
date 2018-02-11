@@ -13,7 +13,7 @@
 >
     <testsuites>
         <testsuite name="Test Suite">
-            <directory>./Visionline/Tests</directory>
+            <directory>./Tests</directory>
             <exclude>./vendor/</exclude>
         </testsuite>
     </testsuites>
