@@ -25,7 +25,7 @@ class RelatedRoleQueryResult extends RelatedQueryResult
      * @param int    $relatedTo    The id of the entity to which this result is related
      * @param string $role         The role of the relation to the entity
      */
-    public function _construct($id, $lastModified = null, $relatedTo = null, $role = null)
+    public function __construct($id, $lastModified = null, $relatedTo = null, $role = null)
     {
         parent::__construct($id, $lastModified, $relatedTo);
 

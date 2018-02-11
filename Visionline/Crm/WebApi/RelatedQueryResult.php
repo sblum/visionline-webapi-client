@@ -30,14 +30,4 @@ class RelatedQueryResult extends QueryResult
 
         $this->relatedTo = $relatedTo;
     }
-
-    /**
-     * Initializes a query result after being constructed by SoapClient.
-     */
-    public function init()
-    {
-        if (null != $this->lastModified) {
-            $this->lastModified = \strtotime($this->lastModified);
-        }
-    }
 }
