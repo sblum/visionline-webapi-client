@@ -1,6 +1,9 @@
 visionline-webapi-client
 ========================
 
+[![Build Status](https://travis-ci.org/sblum/visionline-webapi-client.svg?branch=master)](https://travis-ci.org/sblum/visionline-webapi-client)
+[![Coverage Status](https://coveralls.io/repos/github/sblum/visionline-webapi-client/badge.svg?branch=master)](https://coveralls.io/github/sblum/visionline-webapi-client?branch=master)
+
 Extraction of the visionline webapi client phar for the crm from visionline.at
 
 Visionline is CRM, which offers a PHP phar for the webapi client.
