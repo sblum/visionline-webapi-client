@@ -1,11 +1,10 @@
 <?php
 
-
 namespace Tests\Visionline\Crm\WebApi;
 
+use PHPUnit\Framework\TestCase;
 use Tests\AssertAttributesTrait;
 use Visionline\Crm\WebApi\Enquiry;
-use PHPUnit\Framework\TestCase;
 
 class EnquiryTest extends TestCase
 {

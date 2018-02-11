@@ -1,10 +1,9 @@
 <?php
 
-
 namespace Tests\Visionline\Crm\WebApi;
 
-use Visionline\Crm\WebApi\Expression;
 use PHPUnit\Framework\TestCase;
+use Visionline\Crm\WebApi\Expression;
 use Visionline\Crm\WebApi\Filter;
 use Visionline\Crm\WebApi\Operator;
 

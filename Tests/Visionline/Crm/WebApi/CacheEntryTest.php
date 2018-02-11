@@ -1,10 +1,9 @@
 <?php
 
-
 namespace Tests\Visionline\Crm\WebApi;
 
-use Visionline\Crm\WebApi\CacheEntry;
 use PHPUnit\Framework\TestCase;
+use Visionline\Crm\WebApi\CacheEntry;
 
 class CacheEntryTest extends TestCase
 {
@@ -33,7 +32,7 @@ class CacheEntryTest extends TestCase
 
     public function testMerge()
     {
-        $now = time();
+        $now = \time();
 
         $firstCacheEntry = new CacheEntry(
             self::TYPE,
