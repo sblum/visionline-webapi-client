@@ -27,7 +27,7 @@ before_install:
   - stty cols 120
   - phpenv config-rm xdebug.ini || echo "xdebug.ini not found"
   - if [[ "$RUN_CS_FIXER" != "true" ]]; then composer remove friendsofphp/php-cs-fixer --dev --no-update; fi;
-  - if [[ "$ENABLE_CODE_COVERAGE" == "true" ]]; then composer require satooshi/php-coveralls --dev --no-update; fi;
+  - if [[ "$ENABLE_CODE_COVERAGE" == "true" ]]; then composer require satooshi/php-coveralls:^2.0 --dev --no-update; fi;
   
 install:
   - cat composer.json
@@ -38,4 +38,4 @@ script:
   - if [[ "$RUN_CS_FIXER" == "true" ]]; then vendor/bin/php-cs-fixer --dry-run --diff -v fix; fi;
 
 after_success:
-  - if [[ "$ENABLE_CODE_COVERAGE" == "true" ]]; then vendor/bin/coveralls -v --config .coveralls.yml; fi;
+  - if [[ "$ENABLE_CODE_COVERAGE" == "true" ]]; then vendor/bin/php-coveralls -v --config .coveralls.yml; fi;
