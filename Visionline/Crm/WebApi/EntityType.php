@@ -12,7 +12,7 @@ namespace Visionline\Crm\WebApi;
  * @see EntityType::Projekt
  * @see EntityType::Dokument
  */
-abstract class EntityType
+class EntityType
 {
     /**
      * Constant for entity type 'Objekt'.
@@ -51,4 +51,11 @@ abstract class EntityType
      * Constant for entity-type 'Anfrage'.
      */
     const Anfrage = 'Anfrage';
+
+    /**
+     * Empty private constructor.
+     */
+    private function __construct()
+    {
+    }
 }

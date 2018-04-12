@@ -142,6 +142,7 @@ class WebApi
                     'RelatedRoleQueryResult' => __NAMESPACE__.'\RelatedRoleQueryResult',
                     'Interest' => __NAMESPACE__.'\Interest',
                     'StoredEntity' => __NAMESPACE__.'\StoredEntity',
+                    'EventQueryResult' => __NAMESPACE__.'\EventQueryResult',
                 ],
             ]);
         } else {
@@ -197,9 +198,9 @@ class WebApi
     /**
      * If debugging is enabled, collects a debug message.
      *
-     * @param mixed $message
+     * @param string ...$args
      */
-    public function debug()
+    public function debug(...$args)
     {
         if (isset($this->debug) && $this->debug) {
             if (!isset($this->debugStartTime)) {
@@ -207,7 +208,7 @@ class WebApi
             }
 
             $message = '[WebApi] [+'.\round(1000 * (\microtime(true) - $this->debugStartTime)).'ms] ';
-            foreach (\func_get_args() as $arg) {
+            foreach ($args as $arg) {
                 if (!\is_string($arg)) {
                     $arg = \var_export($arg, true);
                 }
@@ -503,12 +504,45 @@ class WebApi
     }
 
     /**
+     * Calls the webservice method QueryEvents with the specified arguments.
+     *
+     * @param \DateTime|null $fromTimestamp if supplied, only events that happened at or after this timestamp are returned
+     * @param int|null       $afterId       if supplied, only events that happened after the event with this ID are returned
+     * @param int            $max           specifies the maximum amount of events to return
+     *
+     * @return EventQueryResult[] describing the events
+     *
+     * @throws \Exception if a remote error occurs
+     */
+    public function _QueryEvents($fromTimestamp, $afterId, $max)
+    {
+        try {
+            $filter = [
+          'fromTimestamp' => $fromTimestamp,
+          'afterId' => $afterId,
+      ];
+            $result = $this->client->QueryEvents($this->connection, $filter, $max);
+
+            $this->debug('QueryEvents - Result is', $result);
+            $this->debug('QueryEvents - Request was', $this->client->__getLastRequest());
+            $this->debug('QueryEvents - Response was', $this->client->__getLastResponse());
+        } catch (\Exception $e) {
+            $this->debug('QueryEvents - Request was', $this->client->__getLastRequest());
+            $this->debug('QueryEvents - Response was', $this->client->__getLastResponse());
+
+            throw $e;
+        }
+
+        return $result;
+    }
+
+    /**
      * Calls the webservice method Get with the specified arguments.
      *
-     * @param string $type     the entity type
-     * @param array  $ids      the ids of the requested entities (array of int)
-     * @param array  $fields   the requested fields (array of string)
-     * @param array  $idFields the requested fields as ids
+     * @param string $type       the entity type
+     * @param array  $ids        the ids of the requested entities (array of int)
+     * @param array  $fields     the requested fields (array of string)
+     * @param bool   $return_ids Whether to return ids instead of values for relations
      *
      * @throws \SoapFault if a remote error occurs
      *
@@ -516,10 +550,10 @@ class WebApi
      *               the ids of the entities. The keys of the second level are the field identifiers and values are
      *               the corresponding field values. The field values are UTF-8 encoded strings.
      */
-    public function _Get($type, array $ids, array $fields, array $idFields)
+    public function _Get($type, array $ids, array $fields, $return_ids = false)
     {
         try {
-            $getResults = $this->client->Get($this->connection, $type, $ids, $fields, $this->language, $idFields);
+            $getResults = $this->client->Get($this->connection, $type, $ids, $fields, $this->language, $return_ids);
 
             $this->debug('Get - Result is', $getResults);
             $this->debug('Get - Request was', $this->client->__getLastRequest());
@@ -642,8 +676,6 @@ class WebApi
 
             throw $e;
         }
-
-        return $fields;
     }
 
     /**
@@ -684,6 +716,8 @@ class WebApi
      * @param string $type     The entity type for which the fields should be enumerated
      * @param string $category The category of fields to which the result set should be limited. This string has to be UTF-8 encoded.
      *
+     * @throws \Exception if a remote error occurs
+     *
      * @return array of EnumFieldsResult
      *
      * @see EnumFieldsResult
@@ -697,6 +731,8 @@ class WebApi
      * Create an enquiry in the CRM-VISIONLINE system.
      *
      * @param Enquiry $enquiry the enquiry
+     *
+     * @throws \Exception if a remote error occurs
      *
      * @return CreateEnquiryResult
      *
@@ -714,6 +750,7 @@ class WebApi
      * @param int|QueryResult|array $which Specifies the entities for which the responsible contacts should be queried
      *
      * @throws \InvalidArgumentException if $which is not of type int, QueryResult, array of int or array of QueryResult
+     * @throws \Exception                if a remote error occurs
      *
      * @return array of \Visionline\Crm\WebApi\RelatedQueryResult describing the responsible contacts
      *
@@ -807,6 +844,7 @@ class WebApi
      * @param array                 $filterByDokumentart filters the returned documents by the specified document types (array of strings)
      *
      * @throws \InvalidArgumentException if $which is not of type int, QueryResult, array of int or array of QueryResult
+     * @throws \Exception                if a remote error occurs
      *
      * @return array of \Visionline\Crm\WebApi\RelatedQueryResult describing the website documents
      *
@@ -911,6 +949,7 @@ class WebApi
      * @param array                 $filterByRole Optionally filters the returned documents by the specified file extensions (array of strings)
      *
      * @throws \InvalidArgumentException if $which is not of type int, QueryResult, array of int or array of QueryResult
+     * @throws \Exception                if a remote error occurs
      *
      * @return array of \Visionline\Crm\WebApi\RelatedRoleQueryResult describing the contacts
      *
@@ -952,6 +991,7 @@ class WebApi
      * @param array                 $filterByRole Optionally filters the returned documents by the specified file extensions (array of strings)
      *
      * @throws \InvalidArgumentException if $which is not of type int, QueryResult, array of int or array of QueryResult
+     * @throws \Exception                if a remote error occurs
      *
      * @return array of \Visionline\Crm\WebApi\RelatedRoleQueryResult describing the real estates
      *
@@ -993,8 +1033,9 @@ class WebApi
      * @param array                 $filterByRole Optionally filters the returned documents by the specified file extensions (array of strings)
      *
      * @throws \InvalidArgumentException if $which is not of type int, QueryResult, array of int or array of QueryResult
+     * @throws \Exception                if a remote error occurs
      *
-     * @return array of \Visionline\Crm\WebApi\RelatedRoleQueryResult describing the projects
+     * @return array|RelatedRoleQueryResult[] describing the projects
      *
      * @see EntityType
      */
@@ -1031,8 +1072,9 @@ class WebApi
      * @param int|QueryResult|array $which Specifies the contacts for which the images should be queried
      *
      * @throws \InvalidArgumentException if $which is not of type int, QueryResult, array of int or array of QueryResult
+     * @throws \Exception                if a remote error occurs
      *
-     * @return array of \Visionline\Crm\WebApi\RelatedQueryResult describing the website documents
+     * @return array|RelatedQueryResult[] describing the website documents
      */
     public function queryContactImages($which)
     {
@@ -1119,6 +1161,8 @@ class WebApi
      * @param array  $values The values to which the entities fields should be set (associative array where the key is the field identifier and the value the field´s value)
      *
      * @return int The id of the created entity
+     *
+     * @throws \Exception if a remote error occurs
      */
     public function create($type, array $values)
     {
@@ -1131,6 +1175,8 @@ class WebApi
      * @param string $type   The type of the entity to update
      * @param int    $id     The id of the entity to update
      * @param array  $values The values to which the entity´s fields should be set (associative array where the key is the field identifier and the value the field´s value)
+     *
+     * @throws \Exception if a remote error occurs
      */
     public function update($type, $id, array $values)
     {
@@ -1146,6 +1192,8 @@ class WebApi
      *                            (array of QueryResult)
      * @param array     $fields   The requested fields (array of string). The strings in this array have to be UTF-8 encoded.
      * @param array     $idFields The requested fields as ids (array of string). The strings in this array have to be UTF-8 encoded.
+     *
+     * @throws \Exception if a remote error occurs
      *
      * @return array A two-dimensional array that contains the results. The keys of the first level are
      *               the ids of the entities. The keys of the second level are the field identifiers and values are
@@ -1302,7 +1350,7 @@ class WebApi
     {
         $op = new FileGetOperation($this, $this->getFileUrl, $this->connection, $this->bufferSize);
 
-        return $op->exec($documents, $width, $height, $resizeMode);
+        return $op->exec($documents, \stream_context_get_options($this->stream_context), $width, $height, $resizeMode);
     }
 
     /**
@@ -1324,7 +1372,7 @@ class WebApi
     {
         $op = new FileSaveOperation($this, $this->getFileUrl, $this->connection, $this->bufferSize, $directory, $forceDownload);
 
-        return $op->exec($document, $width, $height, $resizeMode);
+        return $op->exec($document, \stream_context_get_options($this->stream_context), $width, $height, $resizeMode);
     }
 
     /**
@@ -1343,7 +1391,7 @@ class WebApi
     public function saveFiles($documents, $directory, $forceDownload = false, $width = null, $height = null, $resizeMode = null)
     {
         $op = new FileSaveOperation($this, $this->getFileUrl, $this->connection, $this->bufferSize, $directory, $forceDownload);
-        $result = $op->execMultiple($documents, $width, $height, $resizeMode);
+        $result = $op->execMultiple($documents, \stream_context_get_options($this->stream_context), $width, $height, $resizeMode);
         $this->debug('saveFiles: result = ', $result);
 
         return $result;
@@ -1365,7 +1413,23 @@ class WebApi
     public function passthruFile($document, $sendHeaders = false, $width = null, $height = null, $resizeMode = null, $attachment = false)
     {
         $op = new FilePassthruOperation($this, $this->getFileUrl, $this->connection, $this->bufferSize, $sendHeaders, $attachment);
-        $op->exec($document, $width, $height, $resizeMode);
+        $op->exec($document, \stream_context_get_options($this->stream_context), $width, $height, $resizeMode);
+    }
+
+    /**
+     * Calls the webservice method QueryEvents with the specified arguments.
+     *
+     * @param \DateTime|null $fromTimestamp if supplied, only events that happened at or after this timestamp are returned
+     * @param int|null       $afterId       if supplied, only events that happened after the event with this ID are returned
+     * @param int            $max           specifies the maximum amount of events to return
+     *
+     * @return EventQueryResult[] describing the events
+     *
+     * @throws \Exception if a remote error occurs
+     */
+    public function queryEvents($fromTimestamp, $afterId, $max)
+    {
+        return $this->_QueryEvents($fromTimestamp, $afterId, $max);
     }
 
     /**
@@ -1373,6 +1437,8 @@ class WebApi
      *
      * @param int|QueryResult|array $contacts       The contacts
      * @param array                 $filterByStatus Filters the interests by their status
+     *
+     * @throws \Exception if a remote error occurs
      *
      * @return array of Interest: the interests of the contacts
      */
@@ -1407,6 +1473,8 @@ class WebApi
      * Retrieves the specified enquiries.
      *
      * @param int|QueryResult|array $enquiries The enquiries
+     *
+     * @throws \Exception if a remote error occurs
      *
      * @return array of StoredEnquiry: the enquiries
      */

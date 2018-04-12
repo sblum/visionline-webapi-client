@@ -59,20 +59,22 @@ abstract class FileOperation
     /**
      * Executes the file operation.
      *
-     * @param int|QueryResult $document   The document to retrieve
-     * @param int             $width      The width to which an image should be resized
-     * @param int             $height     The height to which an image should be resized
-     * @param string          $resizeMode Specifies how an image should be resized
+     * @param int|QueryResult $document               The document to retrieve
+     * @param array           $stream_context_options The stream context options
+     * @param int             $width                  The width to which an image should be resized
+     * @param int             $height                 The height to which an image should be resized
+     * @param string          $resizeMode             Specifies how an image should be resized
      *
      * @throws \InvalidArgumentException If an invalid argument was supplied
+     * @throws \Exception                if an exception occured
      *
      * @return mixed The result of this file operation
      */
-    public function exec($document, $width = null, $height = null, $resizeMode = null)
+    public function exec($document, $stream_context_options, $width = null, $height = null, $resizeMode = null)
     {
         if (\is_int($document)) {
             // if only id is specified, we create a QueryResult with no lastModifiedDate set
-            return $this->exec(new QueryResult($document), $width, $height, $resizeMode);
+            return $this->exec(new QueryResult($document), $stream_context_options, $width, $height, $resizeMode);
         } elseif ($document instanceof QueryResult) {
             $shouldDownload = $this->shouldDownload($document, $width, $height, $resizeMode);
 
@@ -84,7 +86,7 @@ abstract class FileOperation
                     $ifModifiedSince = $shouldDownload;
                 }
 
-                $this->download($document->id, $width, $height, $resizeMode, $ifModifiedSince);
+                $this->download($document->id, $width, $height, $resizeMode, $stream_context_options, $ifModifiedSince);
             }
 
             return $this->getResult();
@@ -95,7 +97,7 @@ abstract class FileOperation
              */
             $results = [];
             foreach ($document as $entry) {
-                \array_push($results, $this->exec($entry, $width, $height, $resizeMode));
+                \array_push($results, $this->exec($entry, $stream_context_options, $width, $height, $resizeMode));
             }
 
             return $results;
@@ -107,16 +109,18 @@ abstract class FileOperation
     /**
      * Executes the file operation.
      *
-     * @param array  $documents  The documents to retrieve
-     * @param int    $width      The width to which an image should be resized
-     * @param int    $height     The height to which an image should be resized
-     * @param string $resizeMode Specifies how an image should be resized
+     * @param array  $documents              The documents to retrieve
+     * @param array  $stream_context_options The stream context options
+     * @param int    $width                  The width to which an image should be resized
+     * @param int    $height                 The height to which an image should be resized
+     * @param string $resizeMode             Specifies how an image should be resized
      *
      * @throws \InvalidArgumentException If an invalid argument was supplied
+     * @throws \Exception                if an exception occured
      *
      * @return mixed The results of this file operation
      */
-    public function execMultiple($documents, $width = null, $height = null, $resizeMode = null)
+    public function execMultiple($documents, $stream_context_options, $width = null, $height = null, $resizeMode = null)
     {
         $results = [];
         foreach ($documents as $document) {
@@ -128,7 +132,7 @@ abstract class FileOperation
                 throw new \InvalidArgumentException('Invalid value int parameter "documents". Expected int or QueryResult, got '.\gettype($document));
             }
 
-            $results[$id] = $this->exec($document, $width, $height, $resizeMode);
+            $results[$id] = $this->exec($document, $stream_context_options, $width, $height, $resizeMode);
         }
 
         return $results;
@@ -137,15 +141,16 @@ abstract class FileOperation
     /**
      * Downloads the contents of the specified document.
      *
-     * @param int    $id              The id of the document
-     * @param int    $width           The width to which an image should be resized
-     * @param int    $height          The height to which an image should be resized
-     * @param string $resizeMode      Specifies how an image should be resized
-     * @param int    $ifModifiedSince If specified, the file is only downloaded if it was modified since <code>$ifModifiedSince</code> (timestamp)
+     * @param int    $id                     The id of the document
+     * @param int    $width                  The width to which an image should be resized
+     * @param int    $height                 The height to which an image should be resized
+     * @param string $resizeMode             Specifies how an image should be resized
+     * @param array  $stream_context_options The stream context options
+     * @param int    $ifModifiedSince        If specified, the file is only downloaded if it was modified since <code>$ifModifiedSince</code> (timestamp)
      *
-     * @throws Exception If an error occurs during download
+     * @throws \Exception If an error occurs during download
      */
-    private function download($id, $width, $height, $resizeMode, $ifModifiedSince = null)
+    private function download($id, $width, $height, $resizeMode, $stream_context_options, $ifModifiedSince = null)
     {
         // Build uri
         $uri = new UriBuilder($this->getFileUrl);
@@ -175,13 +180,16 @@ abstract class FileOperation
 
             $this->webapi->debug('FileOperation::download - Adding header ', $header);
 
-            $source = \fopen($uri, 'rb', false, \stream_context_create([
-          'http' => [
-              'header' => $header,
+            $source = \fopen($uri, 'rb', false, \stream_context_create(\array_merge(
+          $stream_context_options,
+          [
+              'http' => [
+                  'header' => $header,
               ],
-        ]));
+          ]
+      )));
         } else {
-            $source = \fopen($uri, 'rb');
+            $source = \fopen($uri, 'rb', false, \stream_context_create($stream_context_options));
         }
 
         $this->webapi->debug('FileOperation::download - Requesting ', (string) $uri);

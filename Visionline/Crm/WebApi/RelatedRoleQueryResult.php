@@ -21,7 +21,7 @@ class RelatedRoleQueryResult extends RelatedQueryResult
      * Create a query result.
      *
      * @param int    $id           The id of the entity
-     * @param int    $lastModified the date of the last modification of the entity
+     * @param int    $lastModified The date of the last modification of the entity.
      * @param int    $relatedTo    The id of the entity to which this result is related
      * @param string $role         The role of the relation to the entity
      */

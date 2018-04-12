@@ -21,7 +21,7 @@ class RelatedQueryResult extends QueryResult
      * Create a query result.
      *
      * @param int $id           The id of the entity
-     * @param int $lastModified the date of the last modification of the entity
+     * @param int $lastModified The date of the last modification of the entity.
      * @param int The id of the entity to which this result is related
      */
     public function __construct($id, $lastModified = null, $relatedTo = null)
@@ -29,5 +29,15 @@ class RelatedQueryResult extends QueryResult
         parent::__construct($id, $lastModified);
 
         $this->relatedTo = $relatedTo;
+    }
+
+    /**
+     * Initializes a query result after being constructed by SoapClient.
+     */
+    public function init()
+    {
+        if (null != $this->lastModified) {
+            $this->lastModified = \strtotime($this->lastModified);
+        }
     }
 }
