@@ -21,9 +21,9 @@ class FileCache implements Cache
     /**
      * Create a new file cache.
      *
-     * @param string $directory The directory in which to store the cache's files.
+     * @param string $directory the directory in which to store the cache's files
      *
-     * @throws \InvalidArgumentException If the paramter directory is not set, does not denote a directory, or the specified directory is not writeable.
+     * @throws \InvalidArgumentException if the paramter directory is not set, does not denote a directory, or the specified directory is not writeable
      */
     public function __construct($directory)
     {
@@ -76,7 +76,7 @@ class FileCache implements Cache
      *
      * @param string $key The key under which the data is stored
      *
-     * @return mixed The data stored under the specified key.
+     * @return mixed the data stored under the specified key
      *
      * @see \Visionline\Crm\WebApi\Cache::get()
      *

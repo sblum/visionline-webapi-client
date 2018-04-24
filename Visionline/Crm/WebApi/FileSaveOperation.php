@@ -55,7 +55,7 @@ class FileSaveOperation extends FileOperation
      * @param Connection $connection    The connection settings to the CRM-VISIONLINE system
      * @param int        $bufferSize    The buffer size for file operations
      * @param string     $directory     The directory to which to save the file
-     * @param bool       $forceDownload Specifies whether the file should be downloaded, even if it exists and is not outdated.
+     * @param bool       $forceDownload specifies whether the file should be downloaded, even if it exists and is not outdated
      */
     public function __construct(WebApi $webapi, $getFileUrl, Connection $connection, $bufferSize, $directory, $forceDownload)
     {

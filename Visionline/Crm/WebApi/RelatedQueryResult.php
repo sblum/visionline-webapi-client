@@ -21,7 +21,7 @@ class RelatedQueryResult extends QueryResult
      * Create a query result.
      *
      * @param int $id           The id of the entity
-     * @param int $lastModified The date of the last modification of the entity.
+     * @param int $lastModified the date of the last modification of the entity
      * @param int The id of the entity to which this result is related
      */
     public function __construct($id, $lastModified = null, $relatedTo = null)

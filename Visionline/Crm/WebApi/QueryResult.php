@@ -28,7 +28,7 @@ class QueryResult
      * Create a query result.
      *
      * @param int $id           The id of the entity
-     * @param int $lastModified The date of the last modification of the entity.
+     * @param int $lastModified the date of the last modification of the entity
      */
     public function __construct($id, $lastModified = null)
     {
