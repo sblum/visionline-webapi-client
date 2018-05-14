@@ -1350,7 +1350,7 @@ class WebApi
     {
         $op = new FileGetOperation($this, $this->getFileUrl, $this->connection, $this->bufferSize);
 
-        return $op->exec($documents, \stream_context_get_options($this->stream_context), $width, $height, $resizeMode);
+        return $op->exec($documents, is_resource($this->stream_context ? \stream_context_get_options($this->stream_context) : [], $width, $height, $resizeMode);
     }
 
     /**
@@ -1372,7 +1372,7 @@ class WebApi
     {
         $op = new FileSaveOperation($this, $this->getFileUrl, $this->connection, $this->bufferSize, $directory, $forceDownload);
 
-        return $op->exec($document, \stream_context_get_options($this->stream_context), $width, $height, $resizeMode);
+        return $op->exec($document, is_resource($this->stream_context ? \stream_context_get_options($this->stream_context) : [], $width, $height, $resizeMode);
     }
 
     /**
@@ -1391,7 +1391,7 @@ class WebApi
     public function saveFiles($documents, $directory, $forceDownload = false, $width = null, $height = null, $resizeMode = null)
     {
         $op = new FileSaveOperation($this, $this->getFileUrl, $this->connection, $this->bufferSize, $directory, $forceDownload);
-        $result = $op->execMultiple($documents, \stream_context_get_options($this->stream_context), $width, $height, $resizeMode);
+        $result = $op->execMultiple($documents, is_resource($this->stream_context ? \stream_context_get_options($this->stream_context) : [], $width, $height, $resizeMode);
         $this->debug('saveFiles: result = ', $result);
 
         return $result;
@@ -1413,7 +1413,7 @@ class WebApi
     public function passthruFile($document, $sendHeaders = false, $width = null, $height = null, $resizeMode = null, $attachment = false)
     {
         $op = new FilePassthruOperation($this, $this->getFileUrl, $this->connection, $this->bufferSize, $sendHeaders, $attachment);
-        $op->exec($document, \stream_context_get_options($this->stream_context), $width, $height, $resizeMode);
+        $op->exec($document, is_resource($this->stream_context ? \stream_context_get_options($this->stream_context) : [], $width, $height, $resizeMode);
     }
 
     /**
