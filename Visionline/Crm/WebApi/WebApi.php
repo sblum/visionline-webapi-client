@@ -477,6 +477,31 @@ class WebApi
     }
 
     /**
+     * Calls the webservice method UpdateInterest with the specified arguments
+     * @param Interest interest The interest to update.
+     * @throws \Exception if a remote error occurs
+     */
+    public function _UpdateInterest($interest)
+    {
+        try
+        {
+            $result = $this->client->UpdateInterest($this->connection, $interest);
+
+            $this->debug('UpdateInterest - Result is', $result);
+            $this->debug('UpdateInterest - Request was', $this->client->__getLastRequest());
+            $this->debug('UpdateInterest - Response was', $this->client->__getLastResponse());
+        }
+        catch (\Exception $e)
+        {
+            $this->debug('UpdateInterest - Request was', $this->client->__getLastRequest());
+            $this->debug('UpdateInterest - Response was', $this->client->__getLastResponse());
+
+            throw $e;
+        }
+        return $result;
+    }
+
+    /**
      * Calls the webservice method GetInterests with the specified arguments.
      *
      * @param array $enquiryIds The IDs of the enquiries
